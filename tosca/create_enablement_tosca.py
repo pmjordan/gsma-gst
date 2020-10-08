@@ -8,6 +8,7 @@ import json
 
 # get arguments and set to render
 render_vars = json.loads(sys.argv[1])
+# TODO try reading render_vars from a file like mec-hosting_set_up.yml if a file is supplied as an argument
 
 template_filename = "mec_hosting_enablement.j2"
 rendered_filename = "mec_hosting_enablement"+render_vars.get("app_public_url")+".yml"

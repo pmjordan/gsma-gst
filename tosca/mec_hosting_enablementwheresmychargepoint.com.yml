@@ -7,7 +7,14 @@ metadata:
   template_author: paul.m.jordan@bt.com
   template_version: '1.0'
   # look for syntax error with the command below
-  parse_command: puccini-tosca parse "tosca/mec_hosting_enablementwheresmychargepoint.com.yml" -i targetComputeAdminAddress="10.10.10.10" -i public_app_address="1.1.1.1"> out.yml
+  parse_command: puccini-tosca --quirk data_types.timestamp.permissive parse "tosca/mec_hosting_enablementwheresmychargepoint.com.yml" -i targetComputeAdminAddress="10.10.10.10" -i public_app_address="1.1.1.1"> out.yml
+  # the quirk in the above command tells puccini to allow timestamps in yaml format as used by sid.yml
+
+imports:
+  # would normally refer to external repository but for now make it local
+  - file: tosca/sid.yml
+  # The content is a TOSCA encoding of selected SID information model entities as explained in IG1176 plus some small updates
+    namespace_prefix: sid
 
 repositories:
 
@@ -52,6 +59,8 @@ interface_types:
         inputs:
           app_url:
             type: app_url_type
+          SLO:
+            type: sid:MetricDefinition
 
 
 node_types:
@@ -172,8 +181,26 @@ topology_template:
           operations:
             specify_app:
               inputs:
-                app_url: wheresmychargepoint.com
-        
+                app_url: test.com
+                SLO:
+                  ## This value is currently hardcoded but should really be derived from the SLO value supplied with the order using the same technique as app_public_url
+                  _metricDefMeasure:
+                    measure1:
+                      unitOfMeasure:
+                        # so we measure in 1/100 000 ths
+                        amount: 0.00001
+                        # availability is a ratio and so has no units. User interface may choose to display it as a percentage
+                        units: None
+                      valueType: float
+                      _metricDefinitionThresholdSet:
+                        threshold_set1:
+                          thresholdType: LogicDefinition
+                          _metricDefMeasureThresholdRule:
+                          # the above which comes from the node definition points to a superclass but for this instance we want to use a child of that superclass ie MetricThresholdRuleDefinition the child of MetricDefMeasureThresholdRule
+                            rule1:
+                              conformanceTargetLower: 0.9999
+                              conformanceComparatorLower: LE
+
 
   workflows:
     deploy:
@@ -207,5 +234,3 @@ topology_template:
           target: performance_monitor
           activities:
             - call_operation: performance_monitor_config.specify_app
-              inputs:
-                app_url: wheresmychargepoint.com
