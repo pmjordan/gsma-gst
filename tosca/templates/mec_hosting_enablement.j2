@@ -19,10 +19,20 @@ repositories:
       keys:
         cert: cloudrepo.pem
 
+data_types:
+  app_url_type:
+    derived_from: string
+    description: The url used to reach an app when deployed on a MEC
+
 capability_types:
   MECManager:
     derived_from: tosca.capabilities.Node
     valid_source_types: [ smf_type ]
+
+  monitor_performance:
+    derived_from: tosca.capabilities.Node
+    valid_source_types: [ performance_monitor_type ]
+
 
 interface_types:
   smf_management:
@@ -31,9 +41,18 @@ interface_types:
       redirect:
         inputs:
           app_url:
-            type: string
+            type: app_url_type
           public_app_address:
             type: string
+
+  performance_monitor_config:
+    derived_from: tosca.interfaces.Root
+    operations:
+      specify_app:
+        inputs:
+          app_url:
+            type: app_url_type
+
 
 node_types:
   hosted_app_type:
@@ -70,6 +89,17 @@ node_types:
     interfaces:
       smf_management:
         type: smf_management
+
+  performance_monitor_type:
+    derived_from: tosca.nodes.Root
+    capabilities:
+      monitor_app:
+        type: monitor_performance
+        occurrences: [ 0, 1 ]
+    interfaces:
+      performance_monitor_config:
+        type: 
+          performance_monitor_config
 
 topology_template:
   inputs:
@@ -134,6 +164,17 @@ topology_template:
                     # else just get it as an input
                 public_app_address: { get_input: public_app_address }
 
+    performance_monitor:
+      type: performance_monitor_type
+      directives: [ select ]
+      interfaces:
+        performance_monitor_config:
+          operations:
+            specify_app:
+              inputs:
+                app_url: wheresmychargepoint.com
+        
+
   workflows:
     deploy:
       inputs:
@@ -162,3 +203,9 @@ topology_template:
             - set_state: starting
             - call_operation: smf_management.redirect
             - set_state: started
+        monitor:
+          target: performance_monitor
+          activities:
+            - call_operation: performance_monitor_config.specify_app
+              inputs:
+                app_url: {{ app_public_url }}

@@ -70,7 +70,7 @@ topology_template:
           name:
             "availability"
           description:
-            "The MetricDefinition used to define the availability of this hosting service"
+            "The MetricDefinition used to define how this app hosting service should be monitored for its availability"
           _metricDefMeasure:
             # A map of metricDefMeasures associated with this metricDefinition
             measure1:
