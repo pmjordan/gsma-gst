@@ -1,8 +1,19 @@
 {
     "cSpell.words": [
         "CSMS",
+        "ETSI",
         "EVCS",
+        "VNFs",
+        "cloudrepo",
+        "csar",
+        "enablementtest",
+        "enablementwheresmychargepoint",
+        "mecs",
+        "myapp",
+        "mydeployment",
+        "paramterized",
         "sidmodels",
-        "tmforum"
+        "tmforum",
+        "wheresmychargepoint"
     ]
 }
