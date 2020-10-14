@@ -65,6 +65,15 @@ nodeTemplates:
                   $value: measure1
                 $map:
                   - $key:
+                      $value: unitOfMeasure
+                    $map:
+                      - $key:
+                          $value: amount
+                        $value: 1e-05
+                      - $key:
+                          $value: units
+                        $value: None
+                  - $key:
                       $value: valueType
                     $constraints:
                       - $functionCall:
@@ -74,9 +83,9 @@ nodeTemplates:
                             - $value: integer
                             - $value: float
                           url: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G Riders 2020\github_files\gsma-gst\tosca\5G Service Assure.yml
-                          row: 95
+                          row: 129
                           column: 11
-                          path: topology_template.node_templates["my_assured_connection"].properties["metricDefinition_for_availability"]["_metricDefMeasure"]["&{0xc000006a00 measure1 [] <nil> 0xc0003e7d00 true}"]["valueType"]
+                          path: topology_template.node_templates["my_assured_connection"].properties["metricDefinition_for_availability"]["_metricDefMeasure"]["&{0xc000006780 measure1 [] <nil> 0xc000859a80 true}"]["valueType"]
                     $value: float
                   - $key:
                       $value: _metricDefinitionThresholdSet
@@ -93,9 +102,9 @@ nodeTemplates:
                                     - $value: LogicDefinition
                                     - $value: PreDefined
                                   url: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G Riders 2020\github_files\gsma-gst\tosca\5G Service Assure.yml
-                                  row: 95
+                                  row: 129
                                   column: 11
-                                  path: topology_template.node_templates["my_assured_connection"].properties["metricDefinition_for_availability"]["_metricDefMeasure"]["&{0xc000006a00 measure1 [] <nil> 0xc0003e7d00 true}"]["_metricDefinitionThresholdSet"]["&{0xc000006a30 threshold_set1 [] <nil> 0xc0005082c0 true}"]["thresholdType"]
+                                  path: topology_template.node_templates["my_assured_connection"].properties["metricDefinition_for_availability"]["_metricDefMeasure"]["&{0xc000006780 measure1 [] <nil> 0xc000859a80 true}"]["_metricDefinitionThresholdSet"]["&{0xc0000067b0 threshold_set1 [] <nil> 0xc0003d80c0 true}"]["thresholdType"]
                             $value: LogicDefinition
                           - $key:
                               $value: _metricDefMeasureThresholdRule
@@ -119,9 +128,9 @@ nodeTemplates:
                                             - $value: LT
                                             - $value: NEQ
                                           url: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G Riders 2020\github_files\gsma-gst\tosca\5G Service Assure.yml
-                                          row: 95
+                                          row: 129
                                           column: 11
-                                          path: topology_template.node_templates["my_assured_connection"].properties["metricDefinition_for_availability"]["_metricDefMeasure"]["&{0xc000006a00 measure1 [] <nil> 0xc0003e7d00 true}"]["_metricDefinitionThresholdSet"]["&{0xc000006a30 threshold_set1 [] <nil> 0xc0005082c0 true}"]["_metricDefMeasureThresholdRule"]["&{0xc000006a68 rule1 [] <nil> 0xc0005be0c0 true}"]["conformanceComparatorLower"]
+                                          path: topology_template.node_templates["my_assured_connection"].properties["metricDefinition_for_availability"]["_metricDefMeasure"]["&{0xc000006780 measure1 [] <nil> 0xc000859a80 true}"]["_metricDefinitionThresholdSet"]["&{0xc0000067b0 threshold_set1 [] <nil> 0xc0003d80c0 true}"]["_metricDefMeasureThresholdRule"]["&{0xc0000067d8 rule1 [] <nil> 0xc000348600 true}"]["conformanceComparatorLower"]
                                     $value: LE
                   - $key:
                       $value: capturePeriod
@@ -158,16 +167,14 @@ nodeTemplates:
                           tzSign: +
                           tzHour: 0
                           tzMinute: 0
-                  - $key:
-                      $value: unitOfMeasure
-                    $map:
-                      - $key:
-                          $value: amount
-                        $value: 1e-05
-                      - $key:
-                          $value: units
-                        $value: None
-    attributes: {}
+    attributes:
+      serviceInstanceId:
+        $information:
+          definition:
+            description: An invented parameter to uniquely identify this connection
+          type:
+            name: serviceInstanceIdDataType
+        $value: null
     requirements:
       - name: dependency
         capabilityTypeName: tosca::Node
@@ -429,6 +436,136 @@ nodeTemplates:
                   host: ""
               notifications: {}
         path: topology_template.node_templates["my_assured_connection"].requirements{1}
+      - name: dependency
+        capabilityTypeName: tosca::Node
+        capabilityName: ""
+        nodeTypeName: tosca::Root
+        nodeTemplateName: ""
+        nodeTemplatePropertyConstraints: {}
+        capabilityPropertyConstraints: {}
+        relationship:
+          description: This type represents a general dependency relationship between two nodes.
+          types:
+            tosca::DependsOn:
+              description: This type represents a general dependency relationship between two nodes.
+              metadata:
+                puccini.normative: "true"
+                specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                specification.location: 5.7.2
+              parent: tosca::Root
+            tosca::Root:
+              description: This is the default (root) TOSCA Relationship Type definition that all other TOSCA Relationship Types derive from.
+              metadata:
+                puccini.normative: "true"
+                specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                specification.location: 5.7.1
+          properties: {}
+          attributes:
+            state:
+              $information:
+                definition:
+                  description: The state of the relationship instance.
+                type:
+                  name: string
+              $value: initial
+            tosca_id:
+              $information:
+                definition:
+                  description: A unique identifier of the realized instance of a Relationship Template that derives from any TOSCA normative type.
+                type:
+                  name: string
+              $value: null
+            tosca_name:
+              $information:
+                definition:
+                  description: This attribute reflects the name of the Relationship Template as defined in the TOSCA service template. This name is not unique to the realized instance model of corresponding deployed application as each template in the model can result in one or more instances (e.g., scaled) when orchestrated to a provider environment.
+                type:
+                  name: string
+              $value: null
+          interfaces:
+            Configure:
+              description: The lifecycle interfaces define the essential, normative operations that each TOSCA Relationship Types may support.
+              types:
+                tosca::Configure:
+                  description: The lifecycle interfaces define the essential, normative operations that each TOSCA Relationship Types may support.
+                  metadata:
+                    puccini.normative: "true"
+                    specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                    specification.location: 5.8.5
+                  parent: tosca::Root
+                tosca::Root:
+                  description: This is the default (root) TOSCA Interface Type definition that all other TOSCA Interface Types derive from.
+                  metadata:
+                    puccini.normative: "true"
+                    specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                    specification.location: 5.8.3
+              inputs: {}
+              operations:
+                add_source:
+                  description: Operation to notify the target node of a source node which is now available via a relationship.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                add_target:
+                  description: Operation to notify the source node of a target node being added via a relationship.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                post_configure_source:
+                  description: Operation to post-configure the source endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                post_configure_target:
+                  description: Operation to post-configure the target endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                pre_configure_source:
+                  description: Operation to pre-configure the source endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                pre_configure_target:
+                  description: Operation to pre-configure the target endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                remove_source:
+                  description: Operation to remove the source node.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                remove_target:
+                  description: Operation to remove a target node.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                target_changed:
+                  description: Operation to notify source some property or attribute of the target changed
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+              notifications: {}
+        path: topology_template.node_templates["my_assured_connection"].requirements{2}
     capabilities:
       a_end:
         description: ""
@@ -1021,6 +1158,205 @@ nodeTemplates:
         maxRelationshipCount: -1
     interfaces: {}
     artifacts: {}
+  performance_monitor:
+    description: ""
+    types:
+      performance_monitor_type:
+        parent: tosca::Root
+      tosca::Root:
+        description: The TOSCA Root Node Type is the default type that all other TOSCA base Node Types derive from. This allows for all TOSCA nodes to have a consistent set of features for modeling and management (e.g., consistent definitions for requirements, capabilities and lifecycle interfaces).
+        metadata:
+          puccini.normative: "true"
+          specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+          specification.location: 5.9.1
+    directives:
+      - select
+    properties: {}
+    attributes: {}
+    requirements: []
+    capabilities:
+      monitor_app:
+        description: ""
+        types:
+          monitor_performance:
+            parent: tosca::Node
+          tosca::Node:
+            description: The Node capability indicates the base capabilities of a TOSCA Node Type.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.2
+            parent: tosca::Root
+          tosca::Root:
+            description: This is the default (root) TOSCA Capability Type definition that all other TOSCA Capability Types derive from.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.1
+        properties: {}
+        attributes: {}
+        minRelationshipCount: 0
+        maxRelationshipCount: 1
+    interfaces:
+      performance_monitor_config:
+        description: ""
+        types:
+          performance_monitor_config:
+            parent: tosca::Root
+          tosca::Root:
+            description: This is the default (root) TOSCA Interface Type definition that all other TOSCA Interface Types derive from.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.8.3
+        inputs: {}
+        operations:
+          connection_to_monitor_operation:
+            description: ""
+            implementation: ""
+            dependencies: []
+            inputs:
+              SLO:
+                $information:
+                  type:
+                    name: MetricDefinition
+                    description: A set of basic facts that defines, or specifies, what a metric is, such as its name, description, and so forth.
+                  properties:
+                    _metricDefMeasure:
+                      type:
+                        name: map
+                      key:
+                        name: string
+                      value:
+                        name: MetricDefMeasure
+                        description: A MetricDefMeasure specifies a measure of a specific aspect of an entity, such as lost packets or dealer sales target achievement, defined for a MetricDefinition that may trigger consequence (s) (MetricDefMeasureConsequence) if a threshold (MetricDefMeasureThreshold) is crossed.
+                $map:
+                  - $key:
+                      $value: _metricDefMeasure
+                    $map:
+                      - $key:
+                          $value: measure1
+                        $map:
+                          - $key:
+                              $value: valueType
+                            $constraints:
+                              - $functionCall:
+                                  name: tosca.constraint.valid_values
+                                  arguments:
+                                    - $value: string
+                                    - $value: integer
+                                    - $value: float
+                                  url: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G Riders 2020\github_files\gsma-gst\tosca\5G Service Assure.yml
+                                  row: 193
+                                  column: 19
+                                  path: topology_template.node_templates["performance_monitor"].interfaces["performance_monitor_config"].operations["connection_to_monitor_operation"].inputs["SLO"]["_metricDefMeasure"]["&{0xc000007500 measure1 [] <nil> 0xc00067ad80 true}"]["valueType"]
+                            $value: float
+                          - $key:
+                              $value: _metricDefinitionThresholdSet
+                            $map:
+                              - $key:
+                                  $value: threshold_set1
+                                $map:
+                                  - $key:
+                                      $value: thresholdType
+                                    $constraints:
+                                      - $functionCall:
+                                          name: tosca.constraint.valid_values
+                                          arguments:
+                                            - $value: LogicDefinition
+                                            - $value: PreDefined
+                                          url: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G Riders 2020\github_files\gsma-gst\tosca\5G Service Assure.yml
+                                          row: 193
+                                          column: 19
+                                          path: topology_template.node_templates["performance_monitor"].interfaces["performance_monitor_config"].operations["connection_to_monitor_operation"].inputs["SLO"]["_metricDefMeasure"]["&{0xc000007500 measure1 [] <nil> 0xc00067ad80 true}"]["_metricDefinitionThresholdSet"]["&{0xc000007548 threshold_set1 [] <nil> 0xc00067b740 true}"]["thresholdType"]
+                                    $value: LogicDefinition
+                                  - $key:
+                                      $value: _metricDefMeasureThresholdRule
+                                    $map:
+                                      - $key:
+                                          $value: rule1
+                                        $map:
+                                          - $key:
+                                              $value: conformanceTargetLower
+                                            $value: 0.9999
+                                          - $key:
+                                              $value: conformanceComparatorLower
+                                            $constraints:
+                                              - $functionCall:
+                                                  name: tosca.constraint.valid_values
+                                                  arguments:
+                                                    - $value: EQ
+                                                    - $value: GE
+                                                    - $value: GT
+                                                    - $value: LE
+                                                    - $value: LT
+                                                    - $value: NEQ
+                                                  url: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G Riders 2020\github_files\gsma-gst\tosca\5G Service Assure.yml
+                                                  row: 193
+                                                  column: 19
+                                                  path: topology_template.node_templates["performance_monitor"].interfaces["performance_monitor_config"].operations["connection_to_monitor_operation"].inputs["SLO"]["_metricDefMeasure"]["&{0xc000007500 measure1 [] <nil> 0xc00067ad80 true}"]["_metricDefinitionThresholdSet"]["&{0xc000007548 threshold_set1 [] <nil> 0xc00067b740 true}"]["_metricDefMeasureThresholdRule"]["&{0xc000007568 rule1 [] <nil> 0xc00067bd00 true}"]["conformanceComparatorLower"]
+                                            $value: LE
+                          - $key:
+                              $value: capturePeriod
+                            $map:
+                              - $key:
+                                  $value: startDateTime
+                                $value:
+                                  $number: 0
+                                  $string: "1970-01-01T00:00:00Z"
+                                  $originalString: ""
+                                  year: 1970
+                                  month: 1
+                                  day: 1
+                                  hour: 0
+                                  minute: 0
+                                  second: 0
+                                  fraction: 0
+                                  tzSign: +
+                                  tzHour: 0
+                                  tzMinute: 0
+                              - $key:
+                                  $value: endDateTime
+                                $value:
+                                  $number: 0
+                                  $string: "1970-01-01T00:00:00Z"
+                                  $originalString: ""
+                                  year: 1970
+                                  month: 1
+                                  day: 1
+                                  hour: 0
+                                  minute: 0
+                                  second: 0
+                                  fraction: 0
+                                  tzSign: +
+                                  tzHour: 0
+                                  tzMinute: 0
+                          - $key:
+                              $value: unitOfMeasure
+                            $map:
+                              - $key:
+                                  $value: amount
+                                $value: 1e-05
+                              - $key:
+                                  $value: units
+                                $value: None
+              connection_to_monitor_input:
+                $information:
+                  type:
+                    name: serviceInstanceIdDataType
+                $functionCall:
+                  name: tosca.function.get_attribute
+                  arguments:
+                    - $value: my_assured_connection
+                    - $value: serviceInstanceId
+                  url: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G Riders 2020\github_files\gsma-gst\tosca\5G Service Assure.yml
+                  row: 190
+                  column: 17
+                  path: topology_template.node_templates["performance_monitor"].interfaces["performance_monitor_config"].operations["connection_to_monitor_operation"].inputs["connection_to_monitor_input"]
+            timeout: -1
+            host: ""
+        notifications: {}
+    artifacts: {}
   slice_for_5G_assure:
     description: ""
     types:
@@ -1135,7 +1471,7 @@ nodeTemplates:
                     - $value: SELF
                     - $value: affected_connections_list
                   url: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G Riders 2020\github_files\gsma-gst\tosca\5G Service Assure.yml
-                  row: 140
+                  row: 177
                   column: 17
                   path: topology_template.node_templates["slice_for_5G_assure"].interfaces["5G_slice_management_interface"].operations["change_resource_allocation"].inputs["affected_connections_list"]
             timeout: -1
