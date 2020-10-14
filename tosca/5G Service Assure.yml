@@ -26,6 +26,27 @@ imports:
 # The additional resources are provided only for some sub-set of the charging stations
 # The sub-set of affected charging stations may change over time
 
+data_types:
+  serviceInstanceIdDataType:
+    derived_from:
+      integer
+
+capability_types:
+  monitor_performance:
+    derived_from: tosca.capabilities.Node
+    valid_source_types: [ performance_monitor_type ]
+
+interface_types:
+  performance_monitor_config:
+    derived_from: tosca.interfaces.Root
+    operations:
+      connection_to_monitor_operation:
+        inputs:
+          connection_to_monitor_input: 
+            type: serviceInstanceIdDataType
+          SLO:
+            type: sid:MetricDefinition
+
 # Define Node Types
 node_types:
   5G_assure_connection:
@@ -36,6 +57,10 @@ node_types:
         type: sid:MetricDefinition
         description: The Service Level Objective for instances of this class. Modelled in TOSCA using a datatype derived from SID. 
         required: false
+    attributes:
+      serviceInstanceId:
+        type: serviceInstanceIdDataType
+        description: An invented parameter to uniquely identify this connection
 
     capabilities:
       # There are always two external, user plane, interfaces
@@ -68,6 +93,17 @@ node_types:
       # There are always two user plane interfaces
       a_end: Endpoint 
       z-end: Endpoint
+
+  performance_monitor_type:
+    derived_from: tosca.nodes.Root
+    capabilities:
+      monitor_app:
+        type: monitor_performance
+        occurrences: [ 0, 1 ]
+    interfaces:
+      performance_monitor_config:
+        type: 
+          performance_monitor_config
 
 policy_types:
   tosca.policies.Placement.Colocate:
@@ -107,11 +143,14 @@ topology_template:
                     rule1:
                       conformanceTargetLower: 0.9999
                       conformanceComparatorLower: LE
+      attributes:
+        serviceInstanceId:
       requirements:
         - dependency: fixed_connection
           # could add additional node_filter to ensure the endpoints or other properties of the fixed connection  match those of my_CS_CSMS_connection
         - dependency: wireless_connection
           # could add additional node_filter to ensure the endpoints or other properties of the wireless connection match those of my_CS_CSMS_connection
+        - dependency: performance_monitor
 
     my_fixed_connection:
       type: fixed_connection
@@ -139,6 +178,35 @@ topology_template:
       # this uses the abstract node template method
       # Abstract node template (placeholder) to be selected by provider
       directives: [ select ]
+
+    performance_monitor:
+      type: performance_monitor_type
+      directives: [ select ]
+      interfaces:
+        performance_monitor_config:
+          operations:
+            connection_to_monitor_operation:
+              inputs:
+                connection_to_monitor_input: { get_attribute: [my_assured_connection,serviceInstanceId] }
+                SLO:
+                  ## This value is currently hardcoded but should really be derived from the SLO value supplied with the order using the same technique as app_public_url
+                  _metricDefMeasure:
+                    measure1:
+                      unitOfMeasure:
+                        # so we measure in 1/100 000 ths
+                        amount: 0.00001
+                        # availability is a ratio and so has no units. User interface may choose to display it as a percentage
+                        units: None
+                      valueType: float
+                      _metricDefinitionThresholdSet:
+                        threshold_set1:
+                          thresholdType: LogicDefinition
+                          _metricDefMeasureThresholdRule:
+                          # the above which comes from the node definition points to a superclass but for this instance we want to use a child of that superclass ie MetricThresholdRuleDefinition the child of MetricDefMeasureThresholdRule
+                            rule1:
+                              conformanceTargetLower: 0.9999
+                              conformanceComparatorLower: LE
+
 
   policies:
     - wireless_connection_affinity:
