@@ -45,7 +45,13 @@ interface_types:
           connection_to_monitor_input: 
             type: serviceInstanceIdDataType
           SLO:
+            # This technique uses sid entities mapped to TOSCA data types.
             type: sid:MetricDefinition
+          SLO_using_JSON:
+            # This technique uses a schema taken from the TMForum API (which is itself a simplification of the SID)
+            type: string
+            constraints:
+              - schema: { "$schema": "Service_Quality_Management.admin.swagger.json#/definitions/ServiceLevelObjective" }
 
 # Define Node Types
 node_types:
@@ -54,9 +60,16 @@ node_types:
     derived_from: sid:nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE.LogicalResourceABE.LogicalResource.ResourceFunction
     properties:
       metricDefinition_for_availability:
+        # This technique uses sid entities mapped to TOSCA data types
         type: sid:MetricDefinition
         description: The Service Level Objective for instances of this class. Modelled in TOSCA using a datatype derived from SID. 
         required: false
+      metricDefinition_for_availability_using_json:
+        # This technique uses a schema taken from the TMForum API (which is itself a simplification of the SID)
+        type: string
+        constraints:
+          - schema: { "$schema": "Service_Quality_Management.admin.swagger.json#/definitions/ServiceLevelObjective" }
+
     attributes:
       serviceInstanceId:
         type: serviceInstanceIdDataType
@@ -143,6 +156,18 @@ topology_template:
                     rule1:
                       conformanceTargetLower: 0.9999
                       conformanceComparatorLower: LE
+        metricDefinition_for_availability_using_json:
+          '{
+            "myname":
+            {
+             "properties": 
+                {
+                "conformanceComparator": "LE",
+                "conformanceTarget": "0.9999",
+                "name": "availability"
+               }
+            }
+          }'
       attributes:
         serviceInstanceId:
       requirements:
@@ -189,7 +214,7 @@ topology_template:
               inputs:
                 connection_to_monitor_input: { get_attribute: [my_assured_connection,serviceInstanceId] }
                 SLO:
-                  ## This value is currently hardcoded but should really be derived from the SLO value supplied with the order using the same technique as app_public_url
+                  ## This value is currently hardcoded but could use get_attribute to collect values from my_assured_connection or get_input if required
                   _metricDefMeasure:
                     measure1:
                       unitOfMeasure:
@@ -206,6 +231,9 @@ topology_template:
                             rule1:
                               conformanceTargetLower: 0.9999
                               conformanceComparatorLower: LE
+                SLO_using_JSON: { get_attribute: [my_assured_connection,metricDefinition_for_availability_using_json] }
+                  ## Using a complex JSON datatype as alternative makes it easy to pass but prevents the template author changing the values of the internal properties
+
 
 
   policies:
