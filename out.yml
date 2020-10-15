@@ -1,854 +1,2585 @@
-description: A TOSCA template to deploy a specific app on a mec and direct requests
-  to it
+description: A TOSCA template to implement the a service which includes a 5G backup to a fixed connection. The first use is a connection between an EV Charging Station and a Charging Station Management System as part of 5G Riders on the Storm 2020 Catalyst for TMForum
 nodeTemplates:
-  mecs_controlling_smf:
+  my_assured_connection:
     description: ""
     types:
-      smf_type:
-        parent: tosca::Root
-      tosca::Root:
-        description: The TOSCA Root Node Type is the default type that all other TOSCA
-          base Node Types derive from. This allows for all TOSCA nodes to have a consistent
-          set of features for modeling and management (e.g., consistent definitions
-          for requirements, capabilities and lifecycle interfaces).
+      5G_assure_connection:
+        description: assured connection using combination of fixed and wireless
+        parent: nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE.LogicalResourceABE.LogicalResource.ResourceFunction
+      nodes.org.tmforum.models.sidmodels:
         metadata:
-          citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-          citation_location: 5.9.1
-          normative: "true"
-    directives:
-    - select
+          sid_release: "19.0"
+      nodes.org.tmforum.models.sidmodels.ResourceDomain:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels
+      nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.ResourceDomain
+      nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE.LogicalResourceABE:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE
+      nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE.LogicalResourceABE.LogicalResource.ResourceFunction:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE.LogicalResourceABE
+    directives: []
+    properties:
+      my_assured_connection.availability:
+        $information:
+          definition:
+            description: The Service Level Objective for instances of this class. Modelled in TOSCA using a datatype derived from SID.
+          type:
+            name: MetricDefinition
+            description: A set of basic facts that defines, or specifies, what a metric is, such as its name, description, and so forth.
+          properties:
+            _metricDefMeasure:
+              type:
+                name: map
+              key:
+                name: string
+              value:
+                name: MetricDefMeasure
+                description: A MetricDefMeasure specifies a measure of a specific aspect of an entity, such as lost packets or dealer sales target achievement, defined for a MetricDefinition that may trigger consequence (s) (MetricDefMeasureConsequence) if a threshold (MetricDefMeasureThreshold) is crossed.
+            description:
+              type:
+                name: string
+            name:
+              definition:
+                description: A word, term, or phrase by which a MetricDefinition is known and distinguished from other MetricDefinitions.
+              type:
+                name: string
+        $map:
+          - $key:
+              $value: name
+            $value: availabilityServiceLevelObjective
+          - $key:
+              $value: description
+            $value: The MetricDefinition used to define the availability of this connection
+          - $key:
+              $value: _metricDefMeasure
+            $map:
+              - $key:
+                  $value: measure1
+                $map:
+                  - $key:
+                      $value: unitOfMeasure
+                    $map:
+                      - $key:
+                          $value: amount
+                        $value: 1e-05
+                      - $key:
+                          $value: units
+                        $value: None
+                  - $key:
+                      $value: valueType
+                    $constraints:
+                      - $functionCall:
+                          name: tosca.constraint.valid_values
+                          arguments:
+                            - $value: string
+                            - $value: integer
+                            - $value: float
+                          url: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G Riders 2020\github_files\gsma-gst\tosca\5G Service Assure.yml
+                          row: 130
+                          column: 11
+                          path: topology_template.node_templates["my_assured_connection"].properties["my_assured_connection.availability"]["_metricDefMeasure"]["&{0xc0000066e0 measure1 [] <nil> 0xc000149a40 true}"]["valueType"]
+                    $value: float
+                  - $key:
+                      $value: _metricDefinitionThresholdSet
+                    $map:
+                      - $key:
+                          $value: threshold_set1
+                        $map:
+                          - $key:
+                              $value: thresholdType
+                            $constraints:
+                              - $functionCall:
+                                  name: tosca.constraint.valid_values
+                                  arguments:
+                                    - $value: LogicDefinition
+                                    - $value: PreDefined
+                                  url: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G Riders 2020\github_files\gsma-gst\tosca\5G Service Assure.yml
+                                  row: 130
+                                  column: 11
+                                  path: topology_template.node_templates["my_assured_connection"].properties["my_assured_connection.availability"]["_metricDefMeasure"]["&{0xc0000066e0 measure1 [] <nil> 0xc000149a40 true}"]["_metricDefinitionThresholdSet"]["&{0xc000006b80 threshold_set1 [] <nil> 0xc000578040 true}"]["thresholdType"]
+                            $value: LogicDefinition
+                          - $key:
+                              $value: _metricDefMeasureThresholdRule
+                            $map:
+                              - $key:
+                                  $value: rule1
+                                $map:
+                                  - $key:
+                                      $value: conformanceTargetLower
+                                    $value: 0.9999
+                                  - $key:
+                                      $value: conformanceComparatorLower
+                                    $constraints:
+                                      - $functionCall:
+                                          name: tosca.constraint.valid_values
+                                          arguments:
+                                            - $value: EQ
+                                            - $value: GE
+                                            - $value: GT
+                                            - $value: LE
+                                            - $value: LT
+                                            - $value: NEQ
+                                          url: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G Riders 2020\github_files\gsma-gst\tosca\5G Service Assure.yml
+                                          row: 130
+                                          column: 11
+                                          path: topology_template.node_templates["my_assured_connection"].properties["my_assured_connection.availability"]["_metricDefMeasure"]["&{0xc0000066e0 measure1 [] <nil> 0xc000149a40 true}"]["_metricDefinitionThresholdSet"]["&{0xc000006b80 threshold_set1 [] <nil> 0xc000578040 true}"]["_metricDefMeasureThresholdRule"]["&{0xc000006ba0 rule1 [] <nil> 0xc000578600 true}"]["conformanceComparatorLower"]
+                                    $value: LE
+                  - $key:
+                      $value: capturePeriod
+                    $map:
+                      - $key:
+                          $value: startDateTime
+                        $value:
+                          $number: 0
+                          $string: "1970-01-01T00:00:00Z"
+                          $originalString: ""
+                          year: 1970
+                          month: 1
+                          day: 1
+                          hour: 0
+                          minute: 0
+                          second: 0
+                          fraction: 0
+                          tzSign: +
+                          tzHour: 0
+                          tzMinute: 0
+                      - $key:
+                          $value: endDateTime
+                        $value:
+                          $number: 0
+                          $string: "1970-01-01T00:00:00Z"
+                          $originalString: ""
+                          year: 1970
+                          month: 1
+                          day: 1
+                          hour: 0
+                          minute: 0
+                          second: 0
+                          fraction: 0
+                          tzSign: +
+                          tzHour: 0
+                          tzMinute: 0
+    attributes:
+      serviceInstanceId:
+        $information:
+          definition:
+            description: An invented parameter to uniquely identify this connection
+          type:
+            name: serviceInstanceIdDataType
+        $value: null
+    requirements:
+      - name: dependency
+        capabilityTypeName: tosca::Node
+        capabilityName: ""
+        nodeTypeName: fixed_connection
+        nodeTemplateName: ""
+        nodeTemplatePropertyConstraints: {}
+        capabilityPropertyConstraints: {}
+        relationship:
+          description: This type represents a general dependency relationship between two nodes.
+          types:
+            tosca::DependsOn:
+              description: This type represents a general dependency relationship between two nodes.
+              metadata:
+                puccini.normative: "true"
+                specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                specification.location: 5.7.2
+              parent: tosca::Root
+            tosca::Root:
+              description: This is the default (root) TOSCA Relationship Type definition that all other TOSCA Relationship Types derive from.
+              metadata:
+                puccini.normative: "true"
+                specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                specification.location: 5.7.1
+          properties: {}
+          attributes:
+            state:
+              $information:
+                definition:
+                  description: The state of the relationship instance.
+                type:
+                  name: string
+              $value: initial
+            tosca_id:
+              $information:
+                definition:
+                  description: A unique identifier of the realized instance of a Relationship Template that derives from any TOSCA normative type.
+                type:
+                  name: string
+              $value: null
+            tosca_name:
+              $information:
+                definition:
+                  description: This attribute reflects the name of the Relationship Template as defined in the TOSCA service template. This name is not unique to the realized instance model of corresponding deployed application as each template in the model can result in one or more instances (e.g., scaled) when orchestrated to a provider environment.
+                type:
+                  name: string
+              $value: null
+          interfaces:
+            Configure:
+              description: The lifecycle interfaces define the essential, normative operations that each TOSCA Relationship Types may support.
+              types:
+                tosca::Configure:
+                  description: The lifecycle interfaces define the essential, normative operations that each TOSCA Relationship Types may support.
+                  metadata:
+                    puccini.normative: "true"
+                    specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                    specification.location: 5.8.5
+                  parent: tosca::Root
+                tosca::Root:
+                  description: This is the default (root) TOSCA Interface Type definition that all other TOSCA Interface Types derive from.
+                  metadata:
+                    puccini.normative: "true"
+                    specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                    specification.location: 5.8.3
+              inputs: {}
+              operations:
+                add_source:
+                  description: Operation to notify the target node of a source node which is now available via a relationship.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                add_target:
+                  description: Operation to notify the source node of a target node being added via a relationship.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                post_configure_source:
+                  description: Operation to post-configure the source endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                post_configure_target:
+                  description: Operation to post-configure the target endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                pre_configure_source:
+                  description: Operation to pre-configure the source endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                pre_configure_target:
+                  description: Operation to pre-configure the target endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                remove_source:
+                  description: Operation to remove the source node.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                remove_target:
+                  description: Operation to remove a target node.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                target_changed:
+                  description: Operation to notify source some property or attribute of the target changed
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+              notifications: {}
+        path: topology_template.node_templates["my_assured_connection"].requirements{0}
+      - name: dependency
+        capabilityTypeName: tosca::Node
+        capabilityName: ""
+        nodeTypeName: wireless_connection
+        nodeTemplateName: ""
+        nodeTemplatePropertyConstraints: {}
+        capabilityPropertyConstraints: {}
+        relationship:
+          description: This type represents a general dependency relationship between two nodes.
+          types:
+            tosca::DependsOn:
+              description: This type represents a general dependency relationship between two nodes.
+              metadata:
+                puccini.normative: "true"
+                specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                specification.location: 5.7.2
+              parent: tosca::Root
+            tosca::Root:
+              description: This is the default (root) TOSCA Relationship Type definition that all other TOSCA Relationship Types derive from.
+              metadata:
+                puccini.normative: "true"
+                specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                specification.location: 5.7.1
+          properties: {}
+          attributes:
+            state:
+              $information:
+                definition:
+                  description: The state of the relationship instance.
+                type:
+                  name: string
+              $value: initial
+            tosca_id:
+              $information:
+                definition:
+                  description: A unique identifier of the realized instance of a Relationship Template that derives from any TOSCA normative type.
+                type:
+                  name: string
+              $value: null
+            tosca_name:
+              $information:
+                definition:
+                  description: This attribute reflects the name of the Relationship Template as defined in the TOSCA service template. This name is not unique to the realized instance model of corresponding deployed application as each template in the model can result in one or more instances (e.g., scaled) when orchestrated to a provider environment.
+                type:
+                  name: string
+              $value: null
+          interfaces:
+            Configure:
+              description: The lifecycle interfaces define the essential, normative operations that each TOSCA Relationship Types may support.
+              types:
+                tosca::Configure:
+                  description: The lifecycle interfaces define the essential, normative operations that each TOSCA Relationship Types may support.
+                  metadata:
+                    puccini.normative: "true"
+                    specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                    specification.location: 5.8.5
+                  parent: tosca::Root
+                tosca::Root:
+                  description: This is the default (root) TOSCA Interface Type definition that all other TOSCA Interface Types derive from.
+                  metadata:
+                    puccini.normative: "true"
+                    specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                    specification.location: 5.8.3
+              inputs: {}
+              operations:
+                add_source:
+                  description: Operation to notify the target node of a source node which is now available via a relationship.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                add_target:
+                  description: Operation to notify the source node of a target node being added via a relationship.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                post_configure_source:
+                  description: Operation to post-configure the source endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                post_configure_target:
+                  description: Operation to post-configure the target endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                pre_configure_source:
+                  description: Operation to pre-configure the source endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                pre_configure_target:
+                  description: Operation to pre-configure the target endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                remove_source:
+                  description: Operation to remove the source node.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                remove_target:
+                  description: Operation to remove a target node.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                target_changed:
+                  description: Operation to notify source some property or attribute of the target changed
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+              notifications: {}
+        path: topology_template.node_templates["my_assured_connection"].requirements{1}
+      - name: dependency
+        capabilityTypeName: tosca::Node
+        capabilityName: ""
+        nodeTypeName: tosca::Root
+        nodeTemplateName: ""
+        nodeTemplatePropertyConstraints: {}
+        capabilityPropertyConstraints: {}
+        relationship:
+          description: This type represents a general dependency relationship between two nodes.
+          types:
+            tosca::DependsOn:
+              description: This type represents a general dependency relationship between two nodes.
+              metadata:
+                puccini.normative: "true"
+                specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                specification.location: 5.7.2
+              parent: tosca::Root
+            tosca::Root:
+              description: This is the default (root) TOSCA Relationship Type definition that all other TOSCA Relationship Types derive from.
+              metadata:
+                puccini.normative: "true"
+                specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                specification.location: 5.7.1
+          properties: {}
+          attributes:
+            state:
+              $information:
+                definition:
+                  description: The state of the relationship instance.
+                type:
+                  name: string
+              $value: initial
+            tosca_id:
+              $information:
+                definition:
+                  description: A unique identifier of the realized instance of a Relationship Template that derives from any TOSCA normative type.
+                type:
+                  name: string
+              $value: null
+            tosca_name:
+              $information:
+                definition:
+                  description: This attribute reflects the name of the Relationship Template as defined in the TOSCA service template. This name is not unique to the realized instance model of corresponding deployed application as each template in the model can result in one or more instances (e.g., scaled) when orchestrated to a provider environment.
+                type:
+                  name: string
+              $value: null
+          interfaces:
+            Configure:
+              description: The lifecycle interfaces define the essential, normative operations that each TOSCA Relationship Types may support.
+              types:
+                tosca::Configure:
+                  description: The lifecycle interfaces define the essential, normative operations that each TOSCA Relationship Types may support.
+                  metadata:
+                    puccini.normative: "true"
+                    specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                    specification.location: 5.8.5
+                  parent: tosca::Root
+                tosca::Root:
+                  description: This is the default (root) TOSCA Interface Type definition that all other TOSCA Interface Types derive from.
+                  metadata:
+                    puccini.normative: "true"
+                    specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                    specification.location: 5.8.3
+              inputs: {}
+              operations:
+                add_source:
+                  description: Operation to notify the target node of a source node which is now available via a relationship.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                add_target:
+                  description: Operation to notify the source node of a target node being added via a relationship.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                post_configure_source:
+                  description: Operation to post-configure the source endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                post_configure_target:
+                  description: Operation to post-configure the target endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                pre_configure_source:
+                  description: Operation to pre-configure the source endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                pre_configure_target:
+                  description: Operation to pre-configure the target endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                remove_source:
+                  description: Operation to remove the source node.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                remove_target:
+                  description: Operation to remove a target node.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                target_changed:
+                  description: Operation to notify source some property or attribute of the target changed
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+              notifications: {}
+        path: topology_template.node_templates["my_assured_connection"].requirements{2}
+      - name: extension
+        capabilityTypeName: NodeSupplement
+        capabilityName: ""
+        nodeTypeName: tosca::Root
+        nodeTemplateName: ""
+        nodeTemplatePropertyConstraints: {}
+        capabilityPropertyConstraints: {}
+        relationship:
+          description: ""
+          types:
+            MetricDefinitionMeasures:
+              parent: NodeIsSupplementedBy
+            NodeIsSupplementedBy:
+              description: Allows deployable nodes to be enhanced with information in supplementary nodes
+              parent: tosca::Root
+            tosca::Root:
+              description: This is the default (root) TOSCA Relationship Type definition that all other TOSCA Relationship Types derive from.
+              metadata:
+                puccini.normative: "true"
+                specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                specification.location: 5.7.1
+          properties: {}
+          attributes:
+            state:
+              $information:
+                definition:
+                  description: The state of the relationship instance.
+                type:
+                  name: string
+              $value: initial
+            tosca_id:
+              $information:
+                definition:
+                  description: A unique identifier of the realized instance of a Relationship Template that derives from any TOSCA normative type.
+                type:
+                  name: string
+              $value: null
+            tosca_name:
+              $information:
+                definition:
+                  description: This attribute reflects the name of the Relationship Template as defined in the TOSCA service template. This name is not unique to the realized instance model of corresponding deployed application as each template in the model can result in one or more instances (e.g., scaled) when orchestrated to a provider environment.
+                type:
+                  name: string
+              $value: null
+          interfaces:
+            Configure:
+              description: The lifecycle interfaces define the essential, normative operations that each TOSCA Relationship Types may support.
+              types:
+                tosca::Configure:
+                  description: The lifecycle interfaces define the essential, normative operations that each TOSCA Relationship Types may support.
+                  metadata:
+                    puccini.normative: "true"
+                    specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                    specification.location: 5.8.5
+                  parent: tosca::Root
+                tosca::Root:
+                  description: This is the default (root) TOSCA Interface Type definition that all other TOSCA Interface Types derive from.
+                  metadata:
+                    puccini.normative: "true"
+                    specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                    specification.location: 5.8.3
+              inputs: {}
+              operations:
+                add_source:
+                  description: Operation to notify the target node of a source node which is now available via a relationship.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                add_target:
+                  description: Operation to notify the source node of a target node being added via a relationship.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                post_configure_source:
+                  description: Operation to post-configure the source endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                post_configure_target:
+                  description: Operation to post-configure the target endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                pre_configure_source:
+                  description: Operation to pre-configure the source endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                pre_configure_target:
+                  description: Operation to pre-configure the target endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                remove_source:
+                  description: Operation to remove the source node.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                remove_target:
+                  description: Operation to remove a target node.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                target_changed:
+                  description: Operation to notify source some property or attribute of the target changed
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+              notifications: {}
+        path: topology_template.node_templates["my_assured_connection"].requirements{3}
+    capabilities:
+      a_end:
+        description: ""
+        types:
+          tosca::Endpoint:
+            description: This is the default TOSCA type that should be used or extended to define a network endpoint capability. This includes the information to express a basic endpoint with a single port or a complex endpoint with multiple ports. By default the Endpoint is assumed to represent an address on a private network unless otherwise specified.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.7
+            parent: tosca::Root
+          tosca::Root:
+            description: This is the default (root) TOSCA Capability Type definition that all other TOSCA Capability Types derive from.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.1
+        properties:
+          initiator:
+            $information:
+              definition:
+                description: The optional indicator of the direction of the connection.
+              type:
+                name: string
+            $value: source
+          network_name:
+            $information:
+              definition:
+                description: 'The optional name (or ID) of the network this endpoint should be bound to. network_name: PRIVATE | PUBLIC | <network_name> | <network_id>.'
+              type:
+                name: string
+            $value: PRIVATE
+          protocol:
+            $information:
+              definition:
+                description: 'The name of the protocol (i.e., the protocol prefix) that the endpoint accepts (any OSI Layer 4-7 protocols). Examples: http, https, ftp, tcp, udp, etc.'
+              type:
+                name: string
+            $value: tcp
+          secure:
+            $information:
+              definition:
+                description: Requests for the endpoint to be secure and use credentials supplied on the ConnectsTo relationship.
+              type:
+                name: boolean
+            $value: false
+        attributes:
+          ip_address:
+            $information:
+              definition:
+                description: 'Note: This is the IP address as propagated up by the associated node''s host (Compute) container.'
+              type:
+                name: string
+            $value: null
+        minRelationshipCount: 0
+        maxRelationshipCount: -1
+      feature:
+        description: ""
+        types:
+          tosca::Node:
+            description: The Node capability indicates the base capabilities of a TOSCA Node Type.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.2
+            parent: tosca::Root
+          tosca::Root:
+            description: This is the default (root) TOSCA Capability Type definition that all other TOSCA Capability Types derive from.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.1
+        properties: {}
+        attributes: {}
+        minRelationshipCount: 0
+        maxRelationshipCount: -1
+      z-end:
+        description: ""
+        types:
+          tosca::Endpoint:
+            description: This is the default TOSCA type that should be used or extended to define a network endpoint capability. This includes the information to express a basic endpoint with a single port or a complex endpoint with multiple ports. By default the Endpoint is assumed to represent an address on a private network unless otherwise specified.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.7
+            parent: tosca::Root
+          tosca::Root:
+            description: This is the default (root) TOSCA Capability Type definition that all other TOSCA Capability Types derive from.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.1
+        properties:
+          initiator:
+            $information:
+              definition:
+                description: The optional indicator of the direction of the connection.
+              type:
+                name: string
+            $value: source
+          network_name:
+            $information:
+              definition:
+                description: 'The optional name (or ID) of the network this endpoint should be bound to. network_name: PRIVATE | PUBLIC | <network_name> | <network_id>.'
+              type:
+                name: string
+            $value: PRIVATE
+          protocol:
+            $information:
+              definition:
+                description: 'The name of the protocol (i.e., the protocol prefix) that the endpoint accepts (any OSI Layer 4-7 protocols). Examples: http, https, ftp, tcp, udp, etc.'
+              type:
+                name: string
+            $value: tcp
+          secure:
+            $information:
+              definition:
+                description: Requests for the endpoint to be secure and use credentials supplied on the ConnectsTo relationship.
+              type:
+                name: boolean
+            $value: false
+        attributes:
+          ip_address:
+            $information:
+              definition:
+                description: 'Note: This is the IP address as propagated up by the associated node''s host (Compute) container.'
+              type:
+                name: string
+            $value: null
+        minRelationshipCount: 0
+        maxRelationshipCount: -1
+    interfaces: {}
+    artifacts: {}
+  my_assured_connection.availability:
+    description: ""
+    types:
+      MetricDefinition:
+        description: A set of basic facts that defines, or specifies, what a metric is, such as its name, description, and so forth.
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.CommonDomain.MetricABE
+      nodes.org.tmforum.models.sidmodels:
+        metadata:
+          sid_release: "19.0"
+      nodes.org.tmforum.models.sidmodels.CommonDomain:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels
+      nodes.org.tmforum.models.sidmodels.CommonDomain.MetricABE:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.CommonDomain
+    directives: []
+    properties: {}
+    attributes: {}
+    requirements:
+      - name: extension
+        capabilityTypeName: NodeSupplement
+        capabilityName: ""
+        nodeTypeName: tosca::Root
+        nodeTemplateName: ""
+        nodeTemplatePropertyConstraints: {}
+        capabilityPropertyConstraints: {}
+        relationship:
+          description: ""
+          types:
+            MetricDefinitionMeasuredAccordingTo:
+              parent: NodeIsSupplementedBy
+            NodeIsSupplementedBy:
+              description: Allows deployable nodes to be enhanced with information in supplementary nodes
+              parent: tosca::Root
+            tosca::Root:
+              description: This is the default (root) TOSCA Relationship Type definition that all other TOSCA Relationship Types derive from.
+              metadata:
+                puccini.normative: "true"
+                specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                specification.location: 5.7.1
+          properties: {}
+          attributes:
+            state:
+              $information:
+                definition:
+                  description: The state of the relationship instance.
+                type:
+                  name: string
+              $value: initial
+            tosca_id:
+              $information:
+                definition:
+                  description: A unique identifier of the realized instance of a Relationship Template that derives from any TOSCA normative type.
+                type:
+                  name: string
+              $value: null
+            tosca_name:
+              $information:
+                definition:
+                  description: This attribute reflects the name of the Relationship Template as defined in the TOSCA service template. This name is not unique to the realized instance model of corresponding deployed application as each template in the model can result in one or more instances (e.g., scaled) when orchestrated to a provider environment.
+                type:
+                  name: string
+              $value: null
+          interfaces:
+            Configure:
+              description: The lifecycle interfaces define the essential, normative operations that each TOSCA Relationship Types may support.
+              types:
+                tosca::Configure:
+                  description: The lifecycle interfaces define the essential, normative operations that each TOSCA Relationship Types may support.
+                  metadata:
+                    puccini.normative: "true"
+                    specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                    specification.location: 5.8.5
+                  parent: tosca::Root
+                tosca::Root:
+                  description: This is the default (root) TOSCA Interface Type definition that all other TOSCA Interface Types derive from.
+                  metadata:
+                    puccini.normative: "true"
+                    specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                    specification.location: 5.8.3
+              inputs: {}
+              operations:
+                add_source:
+                  description: Operation to notify the target node of a source node which is now available via a relationship.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                add_target:
+                  description: Operation to notify the source node of a target node being added via a relationship.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                post_configure_source:
+                  description: Operation to post-configure the source endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                post_configure_target:
+                  description: Operation to post-configure the target endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                pre_configure_source:
+                  description: Operation to pre-configure the source endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                pre_configure_target:
+                  description: Operation to pre-configure the target endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                remove_source:
+                  description: Operation to remove the source node.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                remove_target:
+                  description: Operation to remove a target node.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                target_changed:
+                  description: Operation to notify source some property or attribute of the target changed
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+              notifications: {}
+        path: topology_template.node_templates["my_assured_connection.availability"].requirements{0}
+    capabilities:
+      NodeSupplement:
+        description: ""
+        types:
+          NodeSupplement:
+            description: A marker to discriminate Supplementary Nodes from Deployable Nodes
+            parent: tosca::Root
+          tosca::Root:
+            description: This is the default (root) TOSCA Capability Type definition that all other TOSCA Capability Types derive from.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.1
+        properties: {}
+        attributes: {}
+        minRelationshipCount: 0
+        maxRelationshipCount: -1
+      feature:
+        description: ""
+        types:
+          tosca::Node:
+            description: The Node capability indicates the base capabilities of a TOSCA Node Type.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.2
+            parent: tosca::Root
+          tosca::Root:
+            description: This is the default (root) TOSCA Capability Type definition that all other TOSCA Capability Types derive from.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.1
+        properties: {}
+        attributes: {}
+        minRelationshipCount: 0
+        maxRelationshipCount: -1
+    interfaces: {}
+    artifacts: {}
+  my_assured_connection.availability.MetricDefMeasure:
+    description: ""
+    types:
+      MetricDefMeasure:
+        description: A MetricDefMeasure specifies a measure of a specific aspect of an entity, such as lost packets or dealer sales target achievement, defined for a MetricDefinition that may trigger consequence (s) (MetricDefMeasureConsequence) if a threshold (MetricDefMeasureThreshold) is crossed.
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.CommonDomain.MetricABE.MetricDefinitionMeasureABE
+      nodes.org.tmforum.models.sidmodels:
+        metadata:
+          sid_release: "19.0"
+      nodes.org.tmforum.models.sidmodels.CommonDomain:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels
+      nodes.org.tmforum.models.sidmodels.CommonDomain.MetricABE:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.CommonDomain
+      nodes.org.tmforum.models.sidmodels.CommonDomain.MetricABE.MetricDefinitionMeasureABE:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.CommonDomain.MetricABE
+    directives: []
+    properties:
+      capturePeriod:
+        $information:
+          definition:
+            description: The period during which Metrics associated with a MetricDefMeasure are captured. Note This may be replaced by a set of entities similar to the Performance Monitoring ABEs.
+          type:
+            name: TimePeriod
+            description: A base / value business entity used to represent a period of time, between two timepoints
+          properties:
+            endDateTime:
+              definition:
+                description: An instant of time, ending  at the TimePeriod Notes If null, If null, then represents to the end of time
+              type:
+                name: DateTime
+                description: Attach the TOSCA and YAML definition for timestamp to the SID DataTime definition which has no canonical format definition
+            startDateTime:
+              definition:
+                description: An instant of time, starting at the TimePeriod Notes If null, then represents to the beginning of time
+              type:
+                name: DateTime
+                description: Attach the TOSCA and YAML definition for timestamp to the SID DataTime definition which has no canonical format definition
+        $map:
+          - $key:
+              $value: endDateTime
+            $value:
+              $number: 0
+              $string: "1970-01-01T00:00:00Z"
+              $originalString: ""
+              year: 1970
+              month: 1
+              day: 1
+              hour: 0
+              minute: 0
+              second: 0
+              fraction: 0
+              tzSign: +
+              tzHour: 0
+              tzMinute: 0
+          - $key:
+              $value: startDateTime
+            $value:
+              $number: 0
+              $string: "1970-01-01T00:00:00Z"
+              $originalString: ""
+              year: 1970
+              month: 1
+              day: 1
+              hour: 0
+              minute: 0
+              second: 0
+              fraction: 0
+              tzSign: +
+              tzHour: 0
+              tzMinute: 0
+      unitOfMeasure:
+        $information:
+          definition:
+            description: The unit of measure for the Metric values associated with a MetricDefMeasure, such as meters, cubic yards, kilograms [ISO 1000]
+          type:
+            name: Quantity
+            description: A base / value business entity used to represent measurements
+          properties:
+            amount:
+              definition:
+                description: A quantity of something, typically the total of a thing or things in number, size, value, extent, or money.
+              type:
+                name: float
+            units:
+              definition:
+                description: The unit of measure for the quantity, such as meters, cubic yards, kilograms [ISO 80000], and the currency referring to [ISO 4217]
+              type:
+                name: string
+        $map:
+          - $key:
+              $value: amount
+            $value: 1e-05
+          - $key:
+              $value: units
+            $value: None
+      valueType:
+        $information:
+          definition:
+            description: A kind of value that the Metric value associated with a MetricDefMeasure can take on, such as numeric, text, and so forth
+          type:
+            name: MetricValueType
+            description: The MetricValueType specifies the different possible type of values such as Int, String...
+        $constraints:
+          - $functionCall:
+              name: tosca.constraint.valid_values
+              arguments:
+                - $value: string
+                - $value: integer
+                - $value: float
+              url: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G Riders 2020\github_files\gsma-gst\tosca\5G Service Assure.yml
+              row: 182
+              column: 9
+              path: topology_template.node_templates["my_assured_connection.availability.MetricDefMeasure"].properties["valueType"]
+        $value: float
+    attributes: {}
+    requirements:
+      - name: extension
+        capabilityTypeName: NodeSupplement
+        capabilityName: ""
+        nodeTypeName: tosca::Root
+        nodeTemplateName: ""
+        nodeTemplatePropertyConstraints: {}
+        capabilityPropertyConstraints: {}
+        relationship:
+          description: ""
+          types:
+            MetricDefMeasuredEvaluatedUsing:
+              parent: NodeIsSupplementedBy
+            NodeIsSupplementedBy:
+              description: Allows deployable nodes to be enhanced with information in supplementary nodes
+              parent: tosca::Root
+            tosca::Root:
+              description: This is the default (root) TOSCA Relationship Type definition that all other TOSCA Relationship Types derive from.
+              metadata:
+                puccini.normative: "true"
+                specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                specification.location: 5.7.1
+          properties: {}
+          attributes:
+            state:
+              $information:
+                definition:
+                  description: The state of the relationship instance.
+                type:
+                  name: string
+              $value: initial
+            tosca_id:
+              $information:
+                definition:
+                  description: A unique identifier of the realized instance of a Relationship Template that derives from any TOSCA normative type.
+                type:
+                  name: string
+              $value: null
+            tosca_name:
+              $information:
+                definition:
+                  description: This attribute reflects the name of the Relationship Template as defined in the TOSCA service template. This name is not unique to the realized instance model of corresponding deployed application as each template in the model can result in one or more instances (e.g., scaled) when orchestrated to a provider environment.
+                type:
+                  name: string
+              $value: null
+          interfaces:
+            Configure:
+              description: The lifecycle interfaces define the essential, normative operations that each TOSCA Relationship Types may support.
+              types:
+                tosca::Configure:
+                  description: The lifecycle interfaces define the essential, normative operations that each TOSCA Relationship Types may support.
+                  metadata:
+                    puccini.normative: "true"
+                    specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                    specification.location: 5.8.5
+                  parent: tosca::Root
+                tosca::Root:
+                  description: This is the default (root) TOSCA Interface Type definition that all other TOSCA Interface Types derive from.
+                  metadata:
+                    puccini.normative: "true"
+                    specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                    specification.location: 5.8.3
+              inputs: {}
+              operations:
+                add_source:
+                  description: Operation to notify the target node of a source node which is now available via a relationship.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                add_target:
+                  description: Operation to notify the source node of a target node being added via a relationship.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                post_configure_source:
+                  description: Operation to post-configure the source endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                post_configure_target:
+                  description: Operation to post-configure the target endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                pre_configure_source:
+                  description: Operation to pre-configure the source endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                pre_configure_target:
+                  description: Operation to pre-configure the target endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                remove_source:
+                  description: Operation to remove the source node.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                remove_target:
+                  description: Operation to remove a target node.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                target_changed:
+                  description: Operation to notify source some property or attribute of the target changed
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+              notifications: {}
+        path: topology_template.node_templates["my_assured_connection.availability.MetricDefMeasure"].requirements{0}
+    capabilities:
+      NodeSupplement:
+        description: ""
+        types:
+          NodeSupplement:
+            description: A marker to discriminate Supplementary Nodes from Deployable Nodes
+            parent: tosca::Root
+          tosca::Root:
+            description: This is the default (root) TOSCA Capability Type definition that all other TOSCA Capability Types derive from.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.1
+        properties: {}
+        attributes: {}
+        minRelationshipCount: 0
+        maxRelationshipCount: -1
+      feature:
+        description: ""
+        types:
+          tosca::Node:
+            description: The Node capability indicates the base capabilities of a TOSCA Node Type.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.2
+            parent: tosca::Root
+          tosca::Root:
+            description: This is the default (root) TOSCA Capability Type definition that all other TOSCA Capability Types derive from.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.1
+        properties: {}
+        attributes: {}
+        minRelationshipCount: 0
+        maxRelationshipCount: -1
+    interfaces: {}
+    artifacts: {}
+  my_assured_connection.availability.MetricDefMeasure.MetricDefinitionThresholdSet:
+    description: ""
+    types:
+      MetricDefinitionThresholdSet:
+        description: A MetricDefMeasureThresholdSet provides a way to group a set of one or more MetricDefMeasureThresholdRules specifying the condition to evaluate for applying consequences. A MetricDefMeasureThresholdSet is used to evaluate one or more MetricDefMesures. A MetricDefMeasureThresholdSet contains either MetricThresholdRuleDefinition instances or PreDefinedMetricThresholdRule instances.
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.CommonDomain.MetricABE.MetricDefinitionMeasureABE.MetricDefinitionMeasureThresholdABE
+      nodes.org.tmforum.models.sidmodels:
+        metadata:
+          sid_release: "19.0"
+      nodes.org.tmforum.models.sidmodels.CommonDomain:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels
+      nodes.org.tmforum.models.sidmodels.CommonDomain.MetricABE:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.CommonDomain
+      nodes.org.tmforum.models.sidmodels.CommonDomain.MetricABE.MetricDefinitionMeasureABE:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.CommonDomain.MetricABE
+      nodes.org.tmforum.models.sidmodels.CommonDomain.MetricABE.MetricDefinitionMeasureABE.MetricDefinitionMeasureThresholdABE:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.CommonDomain.MetricABE.MetricDefinitionMeasureABE
+    directives: []
+    properties:
+      thresholdType:
+        $information:
+          type:
+            name: MetricThresholdType
+            description: The Threshold Type may be either 'LogicDefinition' or 'PreDefined'.
+        $constraints:
+          - $functionCall:
+              name: tosca.constraint.valid_values
+              arguments:
+                - $value: LogicDefinition
+                - $value: PreDefined
+              url: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G Riders 2020\github_files\gsma-gst\tosca\5G Service Assure.yml
+              row: 192
+              column: 9
+              path: topology_template.node_templates["my_assured_connection.availability.MetricDefMeasure.MetricDefinitionThresholdSet"].properties["thresholdType"]
+        $value: LogicDefinition
+    attributes: {}
+    requirements:
+      - name: extension
+        capabilityTypeName: NodeSupplement
+        capabilityName: ""
+        nodeTypeName: tosca::Root
+        nodeTemplateName: ""
+        nodeTemplatePropertyConstraints: {}
+        capabilityPropertyConstraints: {}
+        relationship:
+          description: ""
+          types:
+            MetricDefMeasuredThresholdSetContains:
+              parent: NodeIsSupplementedBy
+            NodeIsSupplementedBy:
+              description: Allows deployable nodes to be enhanced with information in supplementary nodes
+              parent: tosca::Root
+            tosca::Root:
+              description: This is the default (root) TOSCA Relationship Type definition that all other TOSCA Relationship Types derive from.
+              metadata:
+                puccini.normative: "true"
+                specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                specification.location: 5.7.1
+          properties: {}
+          attributes:
+            state:
+              $information:
+                definition:
+                  description: The state of the relationship instance.
+                type:
+                  name: string
+              $value: initial
+            tosca_id:
+              $information:
+                definition:
+                  description: A unique identifier of the realized instance of a Relationship Template that derives from any TOSCA normative type.
+                type:
+                  name: string
+              $value: null
+            tosca_name:
+              $information:
+                definition:
+                  description: This attribute reflects the name of the Relationship Template as defined in the TOSCA service template. This name is not unique to the realized instance model of corresponding deployed application as each template in the model can result in one or more instances (e.g., scaled) when orchestrated to a provider environment.
+                type:
+                  name: string
+              $value: null
+          interfaces:
+            Configure:
+              description: The lifecycle interfaces define the essential, normative operations that each TOSCA Relationship Types may support.
+              types:
+                tosca::Configure:
+                  description: The lifecycle interfaces define the essential, normative operations that each TOSCA Relationship Types may support.
+                  metadata:
+                    puccini.normative: "true"
+                    specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                    specification.location: 5.8.5
+                  parent: tosca::Root
+                tosca::Root:
+                  description: This is the default (root) TOSCA Interface Type definition that all other TOSCA Interface Types derive from.
+                  metadata:
+                    puccini.normative: "true"
+                    specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                    specification.location: 5.8.3
+              inputs: {}
+              operations:
+                add_source:
+                  description: Operation to notify the target node of a source node which is now available via a relationship.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                add_target:
+                  description: Operation to notify the source node of a target node being added via a relationship.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                post_configure_source:
+                  description: Operation to post-configure the source endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                post_configure_target:
+                  description: Operation to post-configure the target endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                pre_configure_source:
+                  description: Operation to pre-configure the source endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                pre_configure_target:
+                  description: Operation to pre-configure the target endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                remove_source:
+                  description: Operation to remove the source node.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                remove_target:
+                  description: Operation to remove a target node.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                target_changed:
+                  description: Operation to notify source some property or attribute of the target changed
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+              notifications: {}
+        path: topology_template.node_templates["my_assured_connection.availability.MetricDefMeasure.MetricDefinitionThresholdSet"].requirements{0}
+    capabilities:
+      NodeSupplement:
+        description: ""
+        types:
+          NodeSupplement:
+            description: A marker to discriminate Supplementary Nodes from Deployable Nodes
+            parent: tosca::Root
+          tosca::Root:
+            description: This is the default (root) TOSCA Capability Type definition that all other TOSCA Capability Types derive from.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.1
+        properties: {}
+        attributes: {}
+        minRelationshipCount: 0
+        maxRelationshipCount: -1
+      feature:
+        description: ""
+        types:
+          tosca::Node:
+            description: The Node capability indicates the base capabilities of a TOSCA Node Type.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.2
+            parent: tosca::Root
+          tosca::Root:
+            description: This is the default (root) TOSCA Capability Type definition that all other TOSCA Capability Types derive from.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.1
+        properties: {}
+        attributes: {}
+        minRelationshipCount: 0
+        maxRelationshipCount: -1
+    interfaces: {}
+    artifacts: {}
+  my_assured_connection.availability.MetricDefMeasure.MetricDefinitionThresholdSet.MetricThresholdRuleDefinition:
+    description: ""
+    types:
+      MetricDefMeasureThresholdRule:
+        description: A MetricDefMeasureThresholdRule is a rule that defines the condition (raise or clear) to achieve to apply consequences when a threshold (MetricDefMeasureThreshold) is crossed or ceased to be crossed. It also defines the severity of the raise or clear of the threshold.
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.CommonDomain.MetricABE.MetricDefinitionMeasureABE.MetricDefinitionMeasureThresholdABE
+      MetricThresholdRuleDefinition:
+        description: 'Various types of threshold logic can be implemented by this entity. For example: Indicator > Value.'
+        metadata:
+          sid_release: "19.0"
+        parent: MetricDefMeasureThresholdRule
+      nodes.org.tmforum.models.sidmodels:
+        metadata:
+          sid_release: "19.0"
+      nodes.org.tmforum.models.sidmodels.CommonDomain:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels
+      nodes.org.tmforum.models.sidmodels.CommonDomain.MetricABE:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.CommonDomain
+      nodes.org.tmforum.models.sidmodels.CommonDomain.MetricABE.MetricDefinitionMeasureABE:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.CommonDomain.MetricABE
+      nodes.org.tmforum.models.sidmodels.CommonDomain.MetricABE.MetricDefinitionMeasureABE.MetricDefinitionMeasureThresholdABE:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.CommonDomain.MetricABE.MetricDefinitionMeasureABE
+    directives: []
+    properties:
+      conformanceComparatorLower:
+        $information:
+          definition:
+            description: An operator that when applied on a value specifies whether a threshold is crossed or ceased to be crossed. This operator is used to compare with the conformanceTargetLower.
+          type:
+            name: MetricThresholdComparator
+            description: List of comparators that can be used to evaluate a value with an other such as equal, greater than, lower than...
+        $constraints:
+          - $functionCall:
+              name: tosca.constraint.valid_values
+              arguments:
+                - $value: EQ
+                - $value: GE
+                - $value: GT
+                - $value: LE
+                - $value: LT
+                - $value: NEQ
+              url: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G Riders 2020\github_files\gsma-gst\tosca\5G Service Assure.yml
+              row: 203
+              column: 9
+              path: topology_template.node_templates["my_assured_connection.availability.MetricDefMeasure.MetricDefinitionThresholdSet.MetricThresholdRuleDefinition"].properties["conformanceComparatorLower"]
+        $value: LE
+      conformanceTargetLower:
+        $information:
+          definition:
+            description: A value used to determine if the threshold is crossed or ceases to be crossed. It represents the Lower limit. The value should be less than the conformanceTargetUpper. The conformance comparators should also be logically defined so as to not lead to a logically impossible condition.
+          type:
+            name: float
+        $value: 0.9999
+      metricApplicability:
+        $information:
+          type:
+            name: MetricDefMeasureApplicability
+            description: represents the time of day or days during which a MetricDefMeasure, MetricDefMeasureThresholdRule or even MetricDefMeasureConsequence are measurable or not.
+          properties:
+            valid_for:
+              type:
+                name: TimePeriod
+                description: A base / value business entity used to represent a period of time, between two timepoints
+              properties:
+                endDateTime:
+                  definition:
+                    description: An instant of time, ending  at the TimePeriod Notes If null, If null, then represents to the end of time
+                  type:
+                    name: DateTime
+                    description: Attach the TOSCA and YAML definition for timestamp to the SID DataTime definition which has no canonical format definition
+                startDateTime:
+                  definition:
+                    description: An instant of time, starting at the TimePeriod Notes If null, then represents to the beginning of time
+                  type:
+                    name: DateTime
+                    description: Attach the TOSCA and YAML definition for timestamp to the SID DataTime definition which has no canonical format definition
+        $map:
+          - $key:
+              $value: valid_for
+            $map:
+              - $key:
+                  $value: endDateTime
+                $value:
+                  $number: 1735689600000000000
+                  $string: "2025-01-01T00:00:00Z"
+                  $originalString: ""
+                  year: 2025
+                  month: 1
+                  day: 1
+                  hour: 0
+                  minute: 0
+                  second: 0
+                  fraction: 0
+                  tzSign: +
+                  tzHour: 0
+                  tzMinute: 0
+              - $key:
+                  $value: startDateTime
+                $value:
+                  $number: 0
+                  $string: "1970-01-01T00:00:00Z"
+                  $originalString: ""
+                  year: 1970
+                  month: 1
+                  day: 1
+                  hour: 0
+                  minute: 0
+                  second: 0
+                  fraction: 0
+                  tzSign: +
+                  tzHour: 0
+                  tzMinute: 0
+    attributes: {}
+    requirements: []
+    capabilities:
+      NodeSupplement:
+        description: ""
+        types:
+          NodeSupplement:
+            description: A marker to discriminate Supplementary Nodes from Deployable Nodes
+            parent: tosca::Root
+          tosca::Root:
+            description: This is the default (root) TOSCA Capability Type definition that all other TOSCA Capability Types derive from.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.1
+        properties: {}
+        attributes: {}
+        minRelationshipCount: 0
+        maxRelationshipCount: -1
+      feature:
+        description: ""
+        types:
+          tosca::Node:
+            description: The Node capability indicates the base capabilities of a TOSCA Node Type.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.2
+            parent: tosca::Root
+          tosca::Root:
+            description: This is the default (root) TOSCA Capability Type definition that all other TOSCA Capability Types derive from.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.1
+        properties: {}
+        attributes: {}
+        minRelationshipCount: 0
+        maxRelationshipCount: -1
+    interfaces: {}
+    artifacts: {}
+  my_fixed_connection:
+    description: ""
+    types:
+      fixed_connection:
+        description: connection between two endpoints over a fixed connection
+        parent: nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE.LogicalResourceABE.LogicalResource.ResourceFunction
+      nodes.org.tmforum.models.sidmodels:
+        metadata:
+          sid_release: "19.0"
+      nodes.org.tmforum.models.sidmodels.ResourceDomain:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels
+      nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.ResourceDomain
+      nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE.LogicalResourceABE:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE
+      nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE.LogicalResourceABE.LogicalResource.ResourceFunction:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE.LogicalResourceABE
+    directives: []
     properties: {}
     attributes: {}
     requirements: []
     capabilities:
-      manage_mecs:
+      a_end:
         description: ""
         types:
-          MECManager:
-            parent: tosca::Node
-          tosca::Node:
-            description: The Node capability indicates the base capabilities of a
-              TOSCA Node Type.
+          tosca::Endpoint:
+            description: This is the default TOSCA type that should be used or extended to define a network endpoint capability. This includes the information to express a basic endpoint with a single port or a complex endpoint with multiple ports. By default the Endpoint is assumed to represent an address on a private network unless otherwise specified.
             metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.5.2
-              normative: "true"
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.7
             parent: tosca::Root
           tosca::Root:
-            description: This is the default (root) TOSCA Capability Type definition
-              that all other TOSCA Capability Types derive from.
+            description: This is the default (root) TOSCA Capability Type definition that all other TOSCA Capability Types derive from.
             metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.5.1
-              normative: "true"
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.1
+        properties:
+          initiator:
+            $information:
+              definition:
+                description: The optional indicator of the direction of the connection.
+              type:
+                name: string
+            $value: source
+          network_name:
+            $information:
+              definition:
+                description: 'The optional name (or ID) of the network this endpoint should be bound to. network_name: PRIVATE | PUBLIC | <network_name> | <network_id>.'
+              type:
+                name: string
+            $value: PRIVATE
+          protocol:
+            $information:
+              definition:
+                description: 'The name of the protocol (i.e., the protocol prefix) that the endpoint accepts (any OSI Layer 4-7 protocols). Examples: http, https, ftp, tcp, udp, etc.'
+              type:
+                name: string
+            $value: tcp
+          secure:
+            $information:
+              definition:
+                description: Requests for the endpoint to be secure and use credentials supplied on the ConnectsTo relationship.
+              type:
+                name: boolean
+            $value: false
+        attributes:
+          ip_address:
+            $information:
+              definition:
+                description: 'Note: This is the IP address as propagated up by the associated node''s host (Compute) container.'
+              type:
+                name: string
+            $value: null
+        minRelationshipCount: 0
+        maxRelationshipCount: -1
+      feature:
+        description: ""
+        types:
+          tosca::Node:
+            description: The Node capability indicates the base capabilities of a TOSCA Node Type.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.2
+            parent: tosca::Root
+          tosca::Root:
+            description: This is the default (root) TOSCA Capability Type definition that all other TOSCA Capability Types derive from.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.1
         properties: {}
         attributes: {}
         minRelationshipCount: 0
         maxRelationshipCount: -1
-    interfaces:
-      smf_management:
+      z-end:
         description: ""
         types:
-          smf_management:
+          tosca::Endpoint:
+            description: This is the default TOSCA type that should be used or extended to define a network endpoint capability. This includes the information to express a basic endpoint with a single port or a complex endpoint with multiple ports. By default the Endpoint is assumed to represent an address on a private network unless otherwise specified.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.7
             parent: tosca::Root
           tosca::Root:
-            description: This is the default (root) TOSCA Interface Type definition
-              that all other TOSCA Interface Types derive from.
+            description: This is the default (root) TOSCA Capability Type definition that all other TOSCA Capability Types derive from.
             metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.8.3
-              normative: "true"
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.1
+        properties:
+          initiator:
+            $information:
+              definition:
+                description: The optional indicator of the direction of the connection.
+              type:
+                name: string
+            $value: source
+          network_name:
+            $information:
+              definition:
+                description: 'The optional name (or ID) of the network this endpoint should be bound to. network_name: PRIVATE | PUBLIC | <network_name> | <network_id>.'
+              type:
+                name: string
+            $value: PRIVATE
+          protocol:
+            $information:
+              definition:
+                description: 'The name of the protocol (i.e., the protocol prefix) that the endpoint accepts (any OSI Layer 4-7 protocols). Examples: http, https, ftp, tcp, udp, etc.'
+              type:
+                name: string
+            $value: tcp
+          secure:
+            $information:
+              definition:
+                description: Requests for the endpoint to be secure and use credentials supplied on the ConnectsTo relationship.
+              type:
+                name: boolean
+            $value: false
+        attributes:
+          ip_address:
+            $information:
+              definition:
+                description: 'Note: This is the IP address as propagated up by the associated node''s host (Compute) container.'
+              type:
+                name: string
+            $value: null
+        minRelationshipCount: 0
+        maxRelationshipCount: -1
+    interfaces: {}
+    artifacts: {}
+  my_wireless_connection:
+    description: ""
+    types:
+      nodes.org.tmforum.models.sidmodels:
+        metadata:
+          sid_release: "19.0"
+      nodes.org.tmforum.models.sidmodels.ResourceDomain:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels
+      nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.ResourceDomain
+      nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE.LogicalResourceABE:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE
+      nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE.LogicalResourceABE.LogicalResource.ResourceFunction:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE.LogicalResourceABE
+      wireless_connection:
+        description: connection between two endpoints over a wireless connection
+        parent: nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE.LogicalResourceABE.LogicalResource.ResourceFunction
+    directives: []
+    properties: {}
+    attributes:
+      wireless_connection_id:
+        $information:
+          type:
+            name: integer
+        $value: null
+    requirements:
+      - name: slice
+        capabilityTypeName: sliceType
+        capabilityName: ""
+        nodeTypeName: 5G_slice
+        nodeTemplateName: ""
+        nodeTemplatePropertyConstraints: {}
+        capabilityPropertyConstraints: {}
+        relationship:
+          description: This type represents a general dependency relationship between two nodes.
+          types:
+            tosca::DependsOn:
+              description: This type represents a general dependency relationship between two nodes.
+              metadata:
+                puccini.normative: "true"
+                specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                specification.location: 5.7.2
+              parent: tosca::Root
+            tosca::Root:
+              description: This is the default (root) TOSCA Relationship Type definition that all other TOSCA Relationship Types derive from.
+              metadata:
+                puccini.normative: "true"
+                specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                specification.location: 5.7.1
+          properties: {}
+          attributes:
+            state:
+              $information:
+                definition:
+                  description: The state of the relationship instance.
+                type:
+                  name: string
+              $value: initial
+            tosca_id:
+              $information:
+                definition:
+                  description: A unique identifier of the realized instance of a Relationship Template that derives from any TOSCA normative type.
+                type:
+                  name: string
+              $value: null
+            tosca_name:
+              $information:
+                definition:
+                  description: This attribute reflects the name of the Relationship Template as defined in the TOSCA service template. This name is not unique to the realized instance model of corresponding deployed application as each template in the model can result in one or more instances (e.g., scaled) when orchestrated to a provider environment.
+                type:
+                  name: string
+              $value: null
+          interfaces:
+            Configure:
+              description: The lifecycle interfaces define the essential, normative operations that each TOSCA Relationship Types may support.
+              types:
+                tosca::Configure:
+                  description: The lifecycle interfaces define the essential, normative operations that each TOSCA Relationship Types may support.
+                  metadata:
+                    puccini.normative: "true"
+                    specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                    specification.location: 5.8.5
+                  parent: tosca::Root
+                tosca::Root:
+                  description: This is the default (root) TOSCA Interface Type definition that all other TOSCA Interface Types derive from.
+                  metadata:
+                    puccini.normative: "true"
+                    specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+                    specification.location: 5.8.3
+              inputs: {}
+              operations:
+                add_source:
+                  description: Operation to notify the target node of a source node which is now available via a relationship.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                add_target:
+                  description: Operation to notify the source node of a target node being added via a relationship.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                post_configure_source:
+                  description: Operation to post-configure the source endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                post_configure_target:
+                  description: Operation to post-configure the target endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                pre_configure_source:
+                  description: Operation to pre-configure the source endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                pre_configure_target:
+                  description: Operation to pre-configure the target endpoint.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                remove_source:
+                  description: Operation to remove the source node.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                remove_target:
+                  description: Operation to remove a target node.
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+                target_changed:
+                  description: Operation to notify source some property or attribute of the target changed
+                  implementation: ""
+                  dependencies: []
+                  inputs: {}
+                  timeout: -1
+                  host: ""
+              notifications: {}
+        path: topology_template.node_templates["my_wireless_connection"].requirements{0}
+    capabilities:
+      a_end:
+        description: ""
+        types:
+          tosca::Endpoint:
+            description: This is the default TOSCA type that should be used or extended to define a network endpoint capability. This includes the information to express a basic endpoint with a single port or a complex endpoint with multiple ports. By default the Endpoint is assumed to represent an address on a private network unless otherwise specified.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.7
+            parent: tosca::Root
+          tosca::Root:
+            description: This is the default (root) TOSCA Capability Type definition that all other TOSCA Capability Types derive from.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.1
+        properties:
+          initiator:
+            $information:
+              definition:
+                description: The optional indicator of the direction of the connection.
+              type:
+                name: string
+            $value: source
+          network_name:
+            $information:
+              definition:
+                description: 'The optional name (or ID) of the network this endpoint should be bound to. network_name: PRIVATE | PUBLIC | <network_name> | <network_id>.'
+              type:
+                name: string
+            $value: PRIVATE
+          protocol:
+            $information:
+              definition:
+                description: 'The name of the protocol (i.e., the protocol prefix) that the endpoint accepts (any OSI Layer 4-7 protocols). Examples: http, https, ftp, tcp, udp, etc.'
+              type:
+                name: string
+            $value: tcp
+          secure:
+            $information:
+              definition:
+                description: Requests for the endpoint to be secure and use credentials supplied on the ConnectsTo relationship.
+              type:
+                name: boolean
+            $value: false
+        attributes:
+          ip_address:
+            $information:
+              definition:
+                description: 'Note: This is the IP address as propagated up by the associated node''s host (Compute) container.'
+              type:
+                name: string
+            $value: null
+        minRelationshipCount: 0
+        maxRelationshipCount: -1
+      feature:
+        description: ""
+        types:
+          tosca::Node:
+            description: The Node capability indicates the base capabilities of a TOSCA Node Type.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.2
+            parent: tosca::Root
+          tosca::Root:
+            description: This is the default (root) TOSCA Capability Type definition that all other TOSCA Capability Types derive from.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.1
+        properties: {}
+        attributes: {}
+        minRelationshipCount: 0
+        maxRelationshipCount: -1
+      z-end:
+        description: ""
+        types:
+          tosca::Endpoint:
+            description: This is the default TOSCA type that should be used or extended to define a network endpoint capability. This includes the information to express a basic endpoint with a single port or a complex endpoint with multiple ports. By default the Endpoint is assumed to represent an address on a private network unless otherwise specified.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.7
+            parent: tosca::Root
+          tosca::Root:
+            description: This is the default (root) TOSCA Capability Type definition that all other TOSCA Capability Types derive from.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.1
+        properties:
+          initiator:
+            $information:
+              definition:
+                description: The optional indicator of the direction of the connection.
+              type:
+                name: string
+            $value: source
+          network_name:
+            $information:
+              definition:
+                description: 'The optional name (or ID) of the network this endpoint should be bound to. network_name: PRIVATE | PUBLIC | <network_name> | <network_id>.'
+              type:
+                name: string
+            $value: PRIVATE
+          protocol:
+            $information:
+              definition:
+                description: 'The name of the protocol (i.e., the protocol prefix) that the endpoint accepts (any OSI Layer 4-7 protocols). Examples: http, https, ftp, tcp, udp, etc.'
+              type:
+                name: string
+            $value: tcp
+          secure:
+            $information:
+              definition:
+                description: Requests for the endpoint to be secure and use credentials supplied on the ConnectsTo relationship.
+              type:
+                name: boolean
+            $value: false
+        attributes:
+          ip_address:
+            $information:
+              definition:
+                description: 'Note: This is the IP address as propagated up by the associated node''s host (Compute) container.'
+              type:
+                name: string
+            $value: null
+        minRelationshipCount: 0
+        maxRelationshipCount: -1
+    interfaces: {}
+    artifacts: {}
+  performance_monitor:
+    description: ""
+    types:
+      performance_monitor_type:
+        parent: tosca::Root
+      tosca::Root:
+        description: The TOSCA Root Node Type is the default type that all other TOSCA base Node Types derive from. This allows for all TOSCA nodes to have a consistent set of features for modeling and management (e.g., consistent definitions for requirements, capabilities and lifecycle interfaces).
+        metadata:
+          puccini.normative: "true"
+          specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+          specification.location: 5.9.1
+    directives:
+      - select
+    properties: {}
+    attributes: {}
+    requirements: []
+    capabilities:
+      monitor_app:
+        description: ""
+        types:
+          monitor_performance:
+            parent: tosca::Node
+          tosca::Node:
+            description: The Node capability indicates the base capabilities of a TOSCA Node Type.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.2
+            parent: tosca::Root
+          tosca::Root:
+            description: This is the default (root) TOSCA Capability Type definition that all other TOSCA Capability Types derive from.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.1
+        properties: {}
+        attributes: {}
+        minRelationshipCount: 0
+        maxRelationshipCount: 1
+    interfaces:
+      performance_monitor_config:
+        description: ""
+        types:
+          performance_monitor_config:
+            parent: tosca::Root
+          tosca::Root:
+            description: This is the default (root) TOSCA Interface Type definition that all other TOSCA Interface Types derive from.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.8.3
         inputs: {}
         operations:
-          redirect:
+          connection_to_monitor_operation:
             description: ""
             implementation: ""
             dependencies: []
             inputs:
-              app_url:
-                $value: wheresmychargepoint.com
-                $type: string
-              public_app_address:
+              SLO:
+                $information:
+                  type:
+                    name: MetricDefinition
+                    description: A set of basic facts that defines, or specifies, what a metric is, such as its name, description, and so forth.
+                  properties:
+                    _metricDefMeasure:
+                      type:
+                        name: map
+                      key:
+                        name: string
+                      value:
+                        name: MetricDefMeasure
+                        description: A MetricDefMeasure specifies a measure of a specific aspect of an entity, such as lost packets or dealer sales target achievement, defined for a MetricDefinition that may trigger consequence (s) (MetricDefMeasureConsequence) if a threshold (MetricDefMeasureThreshold) is crossed.
+                $map:
+                  - $key:
+                      $value: _metricDefMeasure
+                    $map:
+                      - $key:
+                          $value: measure1
+                        $map:
+                          - $key:
+                              $value: valueType
+                            $constraints:
+                              - $functionCall:
+                                  name: tosca.constraint.valid_values
+                                  arguments:
+                                    - $value: string
+                                    - $value: integer
+                                    - $value: float
+                                  url: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G Riders 2020\github_files\gsma-gst\tosca\5G Service Assure.yml
+                                  row: 247
+                                  column: 19
+                                  path: topology_template.node_templates["performance_monitor"].interfaces["performance_monitor_config"].operations["connection_to_monitor_operation"].inputs["SLO"]["_metricDefMeasure"]["&{0xc0000074d8 measure1 [] <nil> 0xc00058ec00 true}"]["valueType"]
+                            $value: float
+                          - $key:
+                              $value: _metricDefinitionThresholdSet
+                            $map:
+                              - $key:
+                                  $value: threshold_set1
+                                $map:
+                                  - $key:
+                                      $value: thresholdType
+                                    $constraints:
+                                      - $functionCall:
+                                          name: tosca.constraint.valid_values
+                                          arguments:
+                                            - $value: LogicDefinition
+                                            - $value: PreDefined
+                                          url: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G Riders 2020\github_files\gsma-gst\tosca\5G Service Assure.yml
+                                          row: 247
+                                          column: 19
+                                          path: topology_template.node_templates["performance_monitor"].interfaces["performance_monitor_config"].operations["connection_to_monitor_operation"].inputs["SLO"]["_metricDefMeasure"]["&{0xc0000074d8 measure1 [] <nil> 0xc00058ec00 true}"]["_metricDefinitionThresholdSet"]["&{0xc000007508 threshold_set1 [] <nil> 0xc00058f5c0 true}"]["thresholdType"]
+                                    $value: LogicDefinition
+                                  - $key:
+                                      $value: _metricDefMeasureThresholdRule
+                                    $map:
+                                      - $key:
+                                          $value: rule1
+                                        $map:
+                                          - $key:
+                                              $value: conformanceComparatorLower
+                                            $constraints:
+                                              - $functionCall:
+                                                  name: tosca.constraint.valid_values
+                                                  arguments:
+                                                    - $value: EQ
+                                                    - $value: GE
+                                                    - $value: GT
+                                                    - $value: LE
+                                                    - $value: LT
+                                                    - $value: NEQ
+                                                  url: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G Riders 2020\github_files\gsma-gst\tosca\5G Service Assure.yml
+                                                  row: 247
+                                                  column: 19
+                                                  path: topology_template.node_templates["performance_monitor"].interfaces["performance_monitor_config"].operations["connection_to_monitor_operation"].inputs["SLO"]["_metricDefMeasure"]["&{0xc0000074d8 measure1 [] <nil> 0xc00058ec00 true}"]["_metricDefinitionThresholdSet"]["&{0xc000007508 threshold_set1 [] <nil> 0xc00058f5c0 true}"]["_metricDefMeasureThresholdRule"]["&{0xc000007530 rule1 [] <nil> 0xc00058fd80 true}"]["conformanceComparatorLower"]
+                                            $value: LE
+                                          - $key:
+                                              $value: conformanceTargetLower
+                                            $value: 0.9999
+                          - $key:
+                              $value: capturePeriod
+                            $map:
+                              - $key:
+                                  $value: startDateTime
+                                $value:
+                                  $number: 0
+                                  $string: "1970-01-01T00:00:00Z"
+                                  $originalString: ""
+                                  year: 1970
+                                  month: 1
+                                  day: 1
+                                  hour: 0
+                                  minute: 0
+                                  second: 0
+                                  fraction: 0
+                                  tzSign: +
+                                  tzHour: 0
+                                  tzMinute: 0
+                              - $key:
+                                  $value: endDateTime
+                                $value:
+                                  $number: 0
+                                  $string: "1970-01-01T00:00:00Z"
+                                  $originalString: ""
+                                  year: 1970
+                                  month: 1
+                                  day: 1
+                                  hour: 0
+                                  minute: 0
+                                  second: 0
+                                  fraction: 0
+                                  tzSign: +
+                                  tzHour: 0
+                                  tzMinute: 0
+                          - $key:
+                              $value: unitOfMeasure
+                            $map:
+                              - $key:
+                                  $value: amount
+                                $value: 1e-05
+                              - $key:
+                                  $value: units
+                                $value: None
+              connection_to_monitor_input:
+                $information:
+                  type:
+                    name: serviceInstanceIdDataType
                 $functionCall:
-                  name: tosca.function.get_input
+                  name: tosca.function.get_attribute
                   arguments:
-                  - $value: public_app_address
-                  url: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G
-                    Riders 2020\github_files\gsma-gst\tosca\mec_hosting_enablement.wheresmychargingpoint.com.yml
-                  row: 126
+                    - $value: my_assured_connection
+                    - $value: serviceInstanceId
+                  url: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G Riders 2020\github_files\gsma-gst\tosca\5G Service Assure.yml
+                  row: 244
                   column: 17
-                  path: topology_template.node_templates["mecs_controlling_smf"].interfaces["smf_management"].operations["redirect"].inputs["public_app_address"]
+                  path: topology_template.node_templates["performance_monitor"].interfaces["performance_monitor_config"].operations["connection_to_monitor_operation"].inputs["connection_to_monitor_input"]
             timeout: -1
             host: ""
         notifications: {}
     artifacts: {}
-  myApp:
+  slice_for_5G_assure:
     description: ""
     types:
-      hosted_app_type:
-        parent: tosca::SoftwareComponent
-      tosca::Root:
-        description: The TOSCA Root Node Type is the default type that all other TOSCA
-          base Node Types derive from. This allows for all TOSCA nodes to have a consistent
-          set of features for modeling and management (e.g., consistent definitions
-          for requirements, capabilities and lifecycle interfaces).
+      5G_embb_slice:
+        description: A concrete class for a slice for enhanced Mobile Broadband
+        parent: 5G_slice
+      5G_slice:
+        description: An abstract class for a network capable of supporting multiple point to point connection at a given qos
+        parent: nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE.CompoundResourceABE.CompoundResource
+      nodes.org.tmforum.models.sidmodels:
         metadata:
-          citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-          citation_location: 5.9.1
-          normative: "true"
-      tosca::SoftwareComponent:
-        description: The TOSCA SoftwareComponent node represents a generic software
-          component that can be managed and run by a TOSCA Compute Node Type.
+          sid_release: "19.0"
+      nodes.org.tmforum.models.sidmodels.ResourceDomain:
         metadata:
-          citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-          citation_location: 5.9.4
-          normative: "true"
-        parent: tosca::Root
-    directives: []
-    properties: {}
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels
+      nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.ResourceDomain
+      nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE.CompoundResourceABE:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE
+      nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE.CompoundResourceABE.CompoundResource:
+        metadata:
+          sid_release: "19.0"
+        parent: nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE.CompoundResourceABE
+    directives:
+      - select
+    properties:
+      resource_size:
+        $information:
+          type:
+            name: integer
+        $value: 10
     attributes:
-      state:
-        $description: The state of the node instance.
-        $value: initial
-        $type: string
-      tosca_id:
-        $description: A unique identifier of the realized instance of a Node Template
-          that derives from any TOSCA normative type.
+      status:
+        $information:
+          definition:
+            description: |-
+              This is an enumerated integer whose value indicates the current status of the object. The following values are defined: 0: Unknown 1: OK 2: Initializing 3: Starting 4: Paused 5: Stopping 6: Stopped 7: Degraded 8: Stressed 9: Predicted Failure 10: Error - General 11: Error - Non Recoverable 12: Not Installed or Not Present 13: In Maintenance 14: Unable To Contact 15: Lost Communications
+              Stopped indicates that the CompoundResource is known to still exist, but it is no longer operational. However, it has not failed.
+              Stressed indicates that the LogicalResource is functioning, but needs attention (e.g., it may be overheating, or overloaded in some way). This is similar to Predicted Failure, which indicates that this CompoundResource is functioning properly, but is predicting a failure in the near future.
+              In Maintenance indicates that this LogicalResource is being configured, maintained, or otherwise administered and is NOT available for service
+          type:
+            name: integer
         $value: null
-        $type: string
-      tosca_name:
-        $description: This attribute reflects the name of the Node Template as defined
-          in the TOSCA service template. This name is not unique to the realized instance
-          model of corresponding deployed application as each template in the model
-          can result in one or more instances (e.g., scaled) when orchestrated to
-          a provider environment.
-        $value: null
-        $type: string
-    requirements:
-    - name: host
-      capabilityTypeName: tosca::Compute
-      capabilityName: ""
-      nodeTypeName: tosca::Compute
-      nodeTemplateName: ""
-      nodeTemplatePropertyConstraints: {}
-      capabilityPropertyConstraints: {}
-      relationship:
-        description: This type represents a hosting relationship between two nodes.
-        types:
-          tosca::HostedOn:
-            description: This type represents a hosting relationship between two nodes.
-            metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.7.3
-              normative: "true"
-              role: host
-            parent: tosca::Root
-          tosca::Root:
-            description: This is the default (root) TOSCA Relationship Type definition
-              that all other TOSCA Relationship Types derive from.
-            metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.7.1
-              normative: "true"
-        properties: {}
-        attributes:
-          state:
-            $description: The state of the relationship instance.
-            $value: initial
-            $type: string
-          tosca_id:
-            $description: A unique identifier of the realized instance of a Relationship
-              Template that derives from any TOSCA normative type.
-            $value: null
-            $type: string
-          tosca_name:
-            $description: This attribute reflects the name of the Relationship Template
-              as defined in the TOSCA service template. This name is not unique to
-              the realized instance model of corresponding deployed application as
-              each template in the model can result in one or more instances (e.g.,
-              scaled) when orchestrated to a provider environment.
-            $value: null
-            $type: string
-        interfaces:
-          Configure:
-            description: The lifecycle interfaces define the essential, normative
-              operations that each TOSCA Relationship Types may support.
-            types:
-              tosca::Configure:
-                description: The lifecycle interfaces define the essential, normative
-                  operations that each TOSCA Relationship Types may support.
-                metadata:
-                  citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-                  citation_location: 5.8.5
-                  normative: "true"
-                parent: tosca::Root
-              tosca::Root:
-                description: This is the default (root) TOSCA Interface Type definition
-                  that all other TOSCA Interface Types derive from.
-                metadata:
-                  citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-                  citation_location: 5.8.3
-                  normative: "true"
-            inputs: {}
-            operations:
-              add_source:
-                description: Operation to notify the target node of a source node
-                  which is now available via a relationship.
-                implementation: ""
-                dependencies: []
-                inputs: {}
-                timeout: -1
-                host: ""
-              add_target:
-                description: Operation to notify the source node of a target node
-                  being added via a relationship.
-                implementation: ""
-                dependencies: []
-                inputs: {}
-                timeout: -1
-                host: ""
-              post_configure_source:
-                description: Operation to post-configure the source endpoint.
-                implementation: ""
-                dependencies: []
-                inputs: {}
-                timeout: -1
-                host: ""
-              post_configure_target:
-                description: Operation to post-configure the target endpoint.
-                implementation: ""
-                dependencies: []
-                inputs: {}
-                timeout: -1
-                host: ""
-              pre_configure_source:
-                description: Operation to pre-configure the source endpoint.
-                implementation: ""
-                dependencies: []
-                inputs: {}
-                timeout: -1
-                host: ""
-              pre_configure_target:
-                description: Operation to pre-configure the target endpoint.
-                implementation: ""
-                dependencies: []
-                inputs: {}
-                timeout: -1
-                host: ""
-              remove_source:
-                description: Operation to remove the source node.
-                implementation: ""
-                dependencies: []
-                inputs: {}
-                timeout: -1
-                host: ""
-              remove_target:
-                description: Operation to remove a target node.
-                implementation: ""
-                dependencies: []
-                inputs: {}
-                timeout: -1
-                host: ""
-              target_changed:
-                description: Operation to notify source some property or attribute
-                  of the target changed
-                implementation: ""
-                dependencies: []
-                inputs: {}
-                timeout: -1
-                host: ""
-            notifications: {}
-      path: topology_template.node_templates["myApp"].requirements{0}
+    requirements: []
     capabilities:
+      SliceType:
+        description: ""
+        types:
+          sliceType:
+            description: 'The slice type name given to some mix of speed, latency etc. '
+            parent: tosca::Root
+          sliceType_embb:
+            description: enhanced Mobile Broadband (eMBB) provides higher speeds for applications such as web browsing, streaming and video conferencing
+            parent: sliceType
+          tosca::Root:
+            description: This is the default (root) TOSCA Capability Type definition that all other TOSCA Capability Types derive from.
+            metadata:
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.1
+        properties: {}
+        attributes: {}
+        minRelationshipCount: 0
+        maxRelationshipCount: -1
       feature:
         description: ""
         types:
           tosca::Node:
-            description: The Node capability indicates the base capabilities of a
-              TOSCA Node Type.
+            description: The Node capability indicates the base capabilities of a TOSCA Node Type.
             metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.5.2
-              normative: "true"
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.2
             parent: tosca::Root
           tosca::Root:
-            description: This is the default (root) TOSCA Capability Type definition
-              that all other TOSCA Capability Types derive from.
+            description: This is the default (root) TOSCA Capability Type definition that all other TOSCA Capability Types derive from.
             metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.5.1
-              normative: "true"
+              puccini.normative: "true"
+              specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+              specification.location: 5.5.1
         properties: {}
         attributes: {}
         minRelationshipCount: 0
         maxRelationshipCount: -1
     interfaces:
-      Standard:
-        description: This lifecycle interface defines the essential, normative operations
-          that TOSCA nodes may support.
+      5G_slice_management_interface:
+        description: This interface is used to control the resources allocated to a slice
         types:
-          tosca::Root:
-            description: This is the default (root) TOSCA Interface Type definition
-              that all other TOSCA Interface Types derive from.
-            metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.8.3
-              normative: "true"
-          tosca::Standard:
-            description: This lifecycle interface defines the essential, normative
-              operations that TOSCA nodes may support.
-            metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.8.4
-              normative: "true"
-            parent: tosca::Root
+          5G_slice_management:
+            description: This interface is used to control the resources allocated to a slice
         inputs: {}
         operations:
-          configure:
-            description: Standard lifecycle configure operation.
-            implementation: scripts/configure.sh
+          change_resource_allocation:
+            description: example placeholder for a function which changes assigned resources of a slice in response to some set of input values
+            implementation: executable_which_changes_resource.sh
             dependencies: []
             inputs:
-              sync_data:
+              affected_connections_list:
+                $information:
+                  definition:
+                    description: A list of zero one or more CS_CSMS_connection identified by the value of their wireless_connection_id which we know is defined as an integer
+                  type:
+                    name: list
                 $functionCall:
-                  name: tosca.function.get_artifact
+                  name: tosca.function.get_input
                   arguments:
-                  - $value: SELF
-                  - $value: data
-                  url: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G
-                    Riders 2020\github_files\gsma-gst\tosca\mec_hosting_enablement.wheresmychargingpoint.com.yml
-                  row: 88
+                    - $value: SELF
+                    - $value: affected_connections_list
+                  url: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G Riders 2020\github_files\gsma-gst\tosca\5G Service Assure.yml
+                  row: 231
                   column: 17
-                  path: topology_template.node_templates["myApp"].interfaces["Standard"].operations["configure"].inputs["sync_data"]
-            timeout: -1
-            host: ""
-          create:
-            description: Standard lifecycle create operation.
-            implementation: http://csp.com/hosted_app/scripts/create.sh
-            dependencies: []
-            inputs:
-              deployment_file:
-                $functionCall:
-                  name: tosca.function.get_artifact
-                  arguments:
-                  - $value: SELF
-                  - $value: mydeployment_file
-                  url: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G
-                    Riders 2020\github_files\gsma-gst\tosca\mec_hosting_enablement.wheresmychargingpoint.com.yml
-                  row: 84
-                  column: 17
-                  path: topology_template.node_templates["myApp"].interfaces["Standard"].operations["create"].inputs["deployment_file"]
-            timeout: -1
-            host: ""
-          delete:
-            description: Standard lifecycle delete operation.
-            implementation: ""
-            dependencies: []
-            inputs: {}
-            timeout: -1
-            host: ""
-          start:
-            description: Standard lifecycle start operation.
-            implementation: ""
-            dependencies: []
-            inputs: {}
-            timeout: -1
-            host: ""
-          stop:
-            description: Standard lifecycle stop operation.
-            implementation: ""
-            dependencies: []
-            inputs: {}
+                  path: topology_template.node_templates["slice_for_5G_assure"].interfaces["5G_slice_management_interface"].operations["change_resource_allocation"].inputs["affected_connections_list"]
             timeout: -1
             host: ""
         notifications: {}
-    artifacts:
-      data:
-        description: ""
-        types: {}
-        properties: {}
-        filename: operationalstate.json
-        sourcePath: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G
-          Riders 2020\github_files\gsma-gst\tosca\http:\livelocation.com\heresmychargepointapp\operationalstate.json
-        targetPath: ""
-        version: ""
-        checksumAlgorithm: ""
-        checksum: ""
-        credential: null
-      mydeployment_file:
-        description: The actual install file for this app
-        types: {}
-        properties: {}
-        filename: WheresMyChargePoint_w1-wip1.csar
-        sourcePath: file:C:\Users\802052047\OneDrive - BT Plc\Documents\MDM\TOSCA\5G
-          Riders 2020\github_files\gsma-gst\tosca\http:\cloudrepo:80\files\
-        targetPath: ""
-        version: ""
-        checksumAlgorithm: ""
-        checksum: ""
-        credential: null
-  myapp_compute:
-    description: ""
-    types:
-      mec_type:
-        parent: tosca::Compute
-      tosca::Abstract.Compute:
-        description: The TOSCA Abstract.Compute node represents an abstract compute
-          resource without any requirements on storage or network resources.
-        metadata:
-          citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-          citation_location: 5.9.2
-          normative: "true"
-        parent: tosca::Root
-      tosca::Compute:
-        description: The TOSCA Compute node represents one or more real or virtual
-          processors of software applications or services along with other essential
-          local resources. Collectively, the resources the compute node represents
-          can logically be viewed as a (real or virtual) "server".
-        metadata:
-          citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-          citation_location: 5.9.3
-          normative: "true"
-        parent: tosca::Abstract.Compute
-      tosca::Root:
-        description: The TOSCA Root Node Type is the default type that all other TOSCA
-          base Node Types derive from. This allows for all TOSCA nodes to have a consistent
-          set of features for modeling and management (e.g., consistent definitions
-          for requirements, capabilities and lifecycle interfaces).
-        metadata:
-          citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-          citation_location: 5.9.1
-          normative: "true"
-    directives: []
-    properties: {}
-    attributes:
-      networks:
-        $description: The list of logical networks assigned to the compute host instance
-          and information about them.
-        $value: null
-        $type: map
-      ports:
-        $description: The list of logical ports assigned to the compute host instance
-          and information about them.
-        $value: null
-        $type: map
-      private_address:
-        $description: The primary private IP address assigned by the cloud provider
-          that applications may use to access the Compute node.
-        $value: null
-        $type: string
-      public_address:
-        $description: The primary public IP address assigned by the cloud provider
-          that applications may use to access the Compute node.
-        $value: null
-        $type: string
-      state:
-        $description: The state of the node instance.
-        $value: initial
-        $type: string
-      tosca_id:
-        $description: A unique identifier of the realized instance of a Node Template
-          that derives from any TOSCA normative type.
-        $value: null
-        $type: string
-      tosca_name:
-        $description: This attribute reflects the name of the Node Template as defined
-          in the TOSCA service template. This name is not unique to the realized instance
-          model of corresponding deployed application as each template in the model
-          can result in one or more instances (e.g., scaled) when orchestrated to
-          a provider environment.
-        $value: null
-        $type: string
-    requirements:
-    - name: controlling_smf
-      capabilityTypeName: MECManager
-      capabilityName: ""
-      nodeTypeName: smf_type
-      nodeTemplateName: ""
-      nodeTemplatePropertyConstraints: {}
-      capabilityPropertyConstraints: {}
-      relationship:
-        description: This type represents a general dependency relationship between
-          two nodes.
-        types:
-          tosca::DependsOn:
-            description: This type represents a general dependency relationship between
-              two nodes.
-            metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.7.2
-              normative: "true"
-            parent: tosca::Root
-          tosca::Root:
-            description: This is the default (root) TOSCA Relationship Type definition
-              that all other TOSCA Relationship Types derive from.
-            metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.7.1
-              normative: "true"
-        properties: {}
-        attributes:
-          state:
-            $description: The state of the relationship instance.
-            $value: initial
-            $type: string
-          tosca_id:
-            $description: A unique identifier of the realized instance of a Relationship
-              Template that derives from any TOSCA normative type.
-            $value: null
-            $type: string
-          tosca_name:
-            $description: This attribute reflects the name of the Relationship Template
-              as defined in the TOSCA service template. This name is not unique to
-              the realized instance model of corresponding deployed application as
-              each template in the model can result in one or more instances (e.g.,
-              scaled) when orchestrated to a provider environment.
-            $value: null
-            $type: string
-        interfaces:
-          Configure:
-            description: The lifecycle interfaces define the essential, normative
-              operations that each TOSCA Relationship Types may support.
-            types:
-              tosca::Configure:
-                description: The lifecycle interfaces define the essential, normative
-                  operations that each TOSCA Relationship Types may support.
-                metadata:
-                  citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-                  citation_location: 5.8.5
-                  normative: "true"
-                parent: tosca::Root
-              tosca::Root:
-                description: This is the default (root) TOSCA Interface Type definition
-                  that all other TOSCA Interface Types derive from.
-                metadata:
-                  citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-                  citation_location: 5.8.3
-                  normative: "true"
-            inputs: {}
-            operations:
-              add_source:
-                description: Operation to notify the target node of a source node
-                  which is now available via a relationship.
-                implementation: ""
-                dependencies: []
-                inputs: {}
-                timeout: -1
-                host: ""
-              add_target:
-                description: Operation to notify the source node of a target node
-                  being added via a relationship.
-                implementation: ""
-                dependencies: []
-                inputs: {}
-                timeout: -1
-                host: ""
-              post_configure_source:
-                description: Operation to post-configure the source endpoint.
-                implementation: ""
-                dependencies: []
-                inputs: {}
-                timeout: -1
-                host: ""
-              post_configure_target:
-                description: Operation to post-configure the target endpoint.
-                implementation: ""
-                dependencies: []
-                inputs: {}
-                timeout: -1
-                host: ""
-              pre_configure_source:
-                description: Operation to pre-configure the source endpoint.
-                implementation: ""
-                dependencies: []
-                inputs: {}
-                timeout: -1
-                host: ""
-              pre_configure_target:
-                description: Operation to pre-configure the target endpoint.
-                implementation: ""
-                dependencies: []
-                inputs: {}
-                timeout: -1
-                host: ""
-              remove_source:
-                description: Operation to remove the source node.
-                implementation: ""
-                dependencies: []
-                inputs: {}
-                timeout: -1
-                host: ""
-              remove_target:
-                description: Operation to remove a target node.
-                implementation: ""
-                dependencies: []
-                inputs: {}
-                timeout: -1
-                host: ""
-              target_changed:
-                description: Operation to notify source some property or attribute
-                  of the target changed
-                implementation: ""
-                dependencies: []
-                inputs: {}
-                timeout: -1
-                host: ""
-            notifications: {}
-      path: topology_template.node_templates["myapp_compute"].requirements{0}
-    capabilities:
-      binding:
-        description: ""
-        types:
-          tosca::Bindable:
-            description: A node type that includes the Bindable capability indicates
-              that it can be bound to a logical network association via a network
-              port.
-            metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.5.14
-              normative: "true"
-            parent: tosca::Node
-          tosca::Node:
-            description: The Node capability indicates the base capabilities of a
-              TOSCA Node Type.
-            metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.5.2
-              normative: "true"
-            parent: tosca::Root
-          tosca::Root:
-            description: This is the default (root) TOSCA Capability Type definition
-              that all other TOSCA Capability Types derive from.
-            metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.5.1
-              normative: "true"
-        properties: {}
-        attributes: {}
-        minRelationshipCount: 0
-        maxRelationshipCount: -1
-      endpoint:
-        description: ""
-        types:
-          tosca::Endpoint:
-            description: This is the default TOSCA type that should be used or extended
-              to define a network endpoint capability. This includes the information
-              to express a basic endpoint with a single port or a complex endpoint
-              with multiple ports. By default the Endpoint is assumed to represent
-              an address on a private network unless otherwise specified.
-            metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.5.7
-              normative: "true"
-            parent: tosca::Root
-          tosca::Endpoint.Admin:
-            description: This is the default TOSCA type that should be used or extended
-              to define a specialized administrator endpoint capability.
-            metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.5.9
-              normative: "true"
-            parent: tosca::Endpoint
-          tosca::Root:
-            description: This is the default (root) TOSCA Capability Type definition
-              that all other TOSCA Capability Types derive from.
-            metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.5.1
-              normative: "true"
-        properties:
-          initiator:
-            $description: The optional indicator of the direction of the connection.
-            $value: source
-            $type: string
-          network_name:
-            $description: 'The optional name (or ID) of the network this endpoint
-              should be bound to. network_name: PRIVATE | PUBLIC | <network_name>
-              | <network_id>.'
-            $value: PRIVATE
-            $type: string
-          protocol:
-            $description: 'The name of the protocol (i.e., the protocol prefix) that
-              the endpoint accepts (any OSI Layer 4-7 protocols). Examples: http,
-              https, ftp, tcp, udp, etc.'
-            $value: tcp
-            $type: string
-          secure:
-            $description: Requests for the endpoint to be secure and use credentials
-              supplied on the ConnectsTo relationship.
-            $value: true
-            $type: boolean
-        attributes:
-          ip_address:
-            $description: 'Note: This is the IP address as propagated up by the associated
-              node''s host (Compute) container.'
-            $value: null
-            $type: string
-        minRelationshipCount: 0
-        maxRelationshipCount: -1
-      feature:
-        description: ""
-        types:
-          tosca::Node:
-            description: The Node capability indicates the base capabilities of a
-              TOSCA Node Type.
-            metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.5.2
-              normative: "true"
-            parent: tosca::Root
-          tosca::Root:
-            description: This is the default (root) TOSCA Capability Type definition
-              that all other TOSCA Capability Types derive from.
-            metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.5.1
-              normative: "true"
-        properties: {}
-        attributes: {}
-        minRelationshipCount: 0
-        maxRelationshipCount: -1
-      host:
-        description: ""
-        types:
-          tosca::Compute:
-            description: The Compute capability, when included on a Node Type or Template
-              definition, indicates that the node can provide hosting on a named compute
-              resource.
-            metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.5.3
-              normative: "true"
-              role: host
-            parent: tosca::Container
-          tosca::Container:
-            description: The Container capability, when included on a Node Type or
-              Template definition, indicates that the node can act as a container
-              for (or a host for) one or more other declared Node Types.
-            metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.5.6
-              normative: "true"
-            parent: tosca::Root
-          tosca::Root:
-            description: This is the default (root) TOSCA Capability Type definition
-              that all other TOSCA Capability Types derive from.
-            metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.5.1
-              normative: "true"
-        properties: {}
-        attributes: {}
-        minRelationshipCount: 0
-        maxRelationshipCount: -1
-      os:
-        description: ""
-        types:
-          tosca::OperatingSystem:
-            description: This is the default TOSCA type that should be used to express
-              an Operating System capability for a node.
-            metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.5.12
-              normative: "true"
-            parent: tosca::Root
-          tosca::Root:
-            description: This is the default (root) TOSCA Capability Type definition
-              that all other TOSCA Capability Types derive from.
-            metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.5.1
-              normative: "true"
-        properties: {}
-        attributes: {}
-        minRelationshipCount: 0
-        maxRelationshipCount: -1
-      scalable:
-        description: ""
-        types:
-          tosca::Root:
-            description: This is the default (root) TOSCA Capability Type definition
-              that all other TOSCA Capability Types derive from.
-            metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.5.1
-              normative: "true"
-          tosca::Scalable:
-            description: This is the default TOSCA type that should be used to express
-              a scalability capability for a node.
-            metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.5.13
-              normative: "true"
-            parent: tosca::Root
-        properties:
-          max_instances:
-            $description: This property is used to indicate the maximum number of
-              instances that should be created for the associated TOSCA Node Template
-              by a TOSCA orchestrator.
-            $value: 1
-            $type: integer
-          min_instances:
-            $description: This property is used to indicate the minimum number of
-              instances that should be created for the associated TOSCA Node Template
-              by a TOSCA orchestrator.
-            $value: 1
-            $type: integer
-        attributes: {}
-        minRelationshipCount: 0
-        maxRelationshipCount: -1
-    interfaces:
       Standard:
-        description: This lifecycle interface defines the essential, normative operations
-          that TOSCA nodes may support.
+        description: This is an enumerated integer whose value indicates the current status of the object
         types:
-          tosca::Root:
-            description: This is the default (root) TOSCA Interface Type definition
-              that all other TOSCA Interface Types derive from.
+          org.tmforum.models.sidmodels.ResourceDomain.ResourceABE.CompoundResourceABE.CompoundResource.status:
+            description: This is an enumerated integer whose value indicates the current status of the object
             metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.8.3
-              normative: "true"
-          tosca::Standard:
-            description: This lifecycle interface defines the essential, normative
-              operations that TOSCA nodes may support.
-            metadata:
-              citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
-              citation_location: 5.8.4
-              normative: "true"
-            parent: tosca::Root
+              sid_release: "19.0"
+              source: org.tmforum.models.sidmodels.ResourceDomain.ResourceABE.CompoundResourceABE.CompoundResource.status
         inputs: {}
         operations:
-          configure:
-            description: Standard lifecycle configure operation.
-            implementation: ""
-            dependencies: []
-            inputs: {}
-            timeout: -1
-            host: ""
           create:
-            description: Standard lifecycle create operation.
+            description: '13: In Maintenance'
             implementation: ""
             dependencies: []
             inputs: {}
             timeout: -1
             host: ""
           delete:
-            description: Standard lifecycle delete operation.
+            description: '12: Not Installed or Not Present'
+            implementation: ""
+            dependencies: []
+            inputs: {}
+            timeout: -1
+            host: ""
+          set_Lost_Communications:
+            description: '15: Lost Communications'
+            implementation: ""
+            dependencies: []
+            inputs: {}
+            timeout: -1
+            host: ""
+          set_degraded:
+            description: '7: Degraded'
+            implementation: ""
+            dependencies: []
+            inputs: {}
+            timeout: -1
+            host: ""
+          set_error_general:
+            description: '10: Error - General'
+            implementation: ""
+            dependencies: []
+            inputs: {}
+            timeout: -1
+            host: ""
+          set_error_non_recoverable:
+            description: '11: Error - Non Recoverable'
+            implementation: ""
+            dependencies: []
+            inputs: {}
+            timeout: -1
+            host: ""
+          set_initializing:
+            description: '2: Initializing'
+            implementation: ""
+            dependencies: []
+            inputs: {}
+            timeout: -1
+            host: ""
+          set_paused:
+            description: '4: Paused'
+            implementation: ""
+            dependencies: []
+            inputs: {}
+            timeout: -1
+            host: ""
+          set_predicted_failure:
+            description: '9: Predicted Failure'
+            implementation: ""
+            dependencies: []
+            inputs: {}
+            timeout: -1
+            host: ""
+          set_starting:
+            description: '3: Starting'
+            implementation: ""
+            dependencies: []
+            inputs: {}
+            timeout: -1
+            host: ""
+          set_stopping:
+            description: '5: Stopping'
+            implementation: ""
+            dependencies: []
+            inputs: {}
+            timeout: -1
+            host: ""
+          set_stressed:
+            description: '8: Stressed'
+            implementation: ""
+            dependencies: []
+            inputs: {}
+            timeout: -1
+            host: ""
+          set_unable_to_contact:
+            description: '14: Unable To Contact'
+            implementation: ""
+            dependencies: []
+            inputs: {}
+            timeout: -1
+            host: ""
+          set_unknown:
+            description: '0: Unknown'
             implementation: ""
             dependencies: []
             inputs: {}
             timeout: -1
             host: ""
           start:
-            description: Standard lifecycle start operation.
+            description: '1: OK'
             implementation: ""
             dependencies: []
             inputs: {}
             timeout: -1
             host: ""
           stop:
-            description: Standard lifecycle stop operation.
+            description: '6: Stopped'
             implementation: ""
             dependencies: []
             inputs: {}
@@ -857,28 +2588,38 @@ nodeTemplates:
         notifications: {}
     artifacts: {}
 groups: {}
-policies: {}
-inputs:
-  public_app_address:
-    $value: 1.1.1.1
-    $type: string
-  targetComputeAdminAddress:
-    $value: 10.10.10.10
-    $type: string
+policies:
+  wireless_connection_affinity:
+    description: Keep all instances of my_wireless_connection on a single instance of slice_for_5G_assure
+    types:
+      tosca.policies.Placement.Colocate:
+        parent: tosca::Placement
+      tosca::Placement:
+        description: This is the default (root) TOSCA Policy Type definition that is used to govern placement of TOSCA nodes or groups of nodes.
+        metadata:
+          puccini.normative: "true"
+          specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+          specification.location: 5.11.2
+        parent: tosca::Root
+      tosca::Root:
+        description: This is the default (root) TOSCA Policy Type definition that all other TOSCA base Policy Types derive from.
+        metadata:
+          puccini.normative: "true"
+          specification.citation: '[TOSCA-Simple-Profile-YAML-v1.3]'
+          specification.location: 5.11.1
+    properties:
+      affinity:
+        $information:
+          type:
+            name: string
+        $value: slice_for_5G_assure
+inputs: {}
 outputs: {}
-workflows:
-  deploy:
-    description: ""
-    preconditions: []
-    steps:
-      install: {}
-      redirect: {}
-      sync: {}
-    inputs: {}
+workflows: {}
 substitution: null
 metadata:
-  parse_command: puccini-tosca parse "tosca/mec_hosting_enablement.wheresmychargingpoint.com.yml"
+  parse_command: puccini-tosca --quirk data_types.timestamp.permissive parse "tosca/5G Service Assure.yml" > out.yml
   template_author: paul.m.jordan@bt.com
-  template_name: generic_app
-  template_version: "1.0"
+  template_name: 5G Service Assure
+  template_version: "5.0"
 scriptletNamespace: {}
