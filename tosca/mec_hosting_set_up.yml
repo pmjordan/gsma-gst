@@ -7,7 +7,7 @@ metadata:
   template_author: paul.m.jordan@bt.com
   template_version: '1.0'
   # look for syntax error with the command below
-  parse_command: puccini-tosca --quirk data_types.timestamp.permissive parse "tosca/mec_hosting_set_up.yml" -n tosca/mec_hosting_set_up_inputs.yml
+  parse_command: puccini-tosca --quirk data_types.timestamp.permissive parse "tosca/mec_hosting_set_up.yml" -n tosca/mec_hosting_set_up_inputs.yml > out.txt
 
 imports:
   # would normally refer to external repository but for now make it local

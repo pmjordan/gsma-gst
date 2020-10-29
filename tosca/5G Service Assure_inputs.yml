@@ -1,0 +1,4 @@
+node_templates["my_assured_connection"].interfaces["service_translations"].operations["get_SLO_from_service_order.service_order: >
+          {
+          TMF641ServiceOrderPayload: "in json format"
+          }

@@ -6,7 +6,7 @@ metadata:
   template_name: 5G Service Assure
   template_author: paul.m.jordan@bt.com
   template_version: '5.0'
-  parse_command: puccini-tosca --quirk data_types.timestamp.permissive parse "tosca/5G Service Assure.yml" > out.txt
+  parse_command: puccini-tosca --quirk data_types.timestamp.permissive parse "tosca/5G Service Assure.yml" -n "tosca/5G Service Assure_inputs.yml" > out.txt
   # the quirk in the above command tells puccini to allow timestamps in yaml format as used by sid.yml
 
 imports:
@@ -26,10 +26,26 @@ imports:
 # The additional resources are provided only for some sub-set of the charging stations
 # The sub-set of affected charging stations may change over time
 
+# The performance monitor system is configured over TMF657
+
 data_types:
-  serviceInstanceIdDataType:
-    derived_from:
-      integer
+  service_order_id_data_type:
+    derived_from: integer
+
+  service_level_objective_data_type:
+    derived_from: json
+    description: ServiceLevelObjective as defined by TMF657
+    constraints:
+      # could specify schema location as 
+      # https://raw.githubusercontent.com/tmforum-apis/TMF657_ServiceQualityManagement/master/Service_Quality_Management.admin.swagger.json#/definitions/ServiceLevelObjective 
+      # but blocked by my corporate firewall so use a local copy
+        - schema: { "$schema": "swaggers/Service_Quality_Management.admin.swagger.json#/definitions/ServiceLevelObjective" }
+
+  service_order_data_type:
+    derived_from: json
+    description: ServiceOrder as defined by TMF641
+    constraints:
+      - schema: { "$schema": "swaggers/TMF641-Service_Ordering-v4.0.0.swagger.json#/definitions/ServiceOrder"}
 
 capability_types:
   monitor_performance:
@@ -37,44 +53,74 @@ capability_types:
     valid_source_types: [ performance_monitor_type ]
 
 interface_types:
-  performance_monitor_config:
+  performance_monitor_config_interface_type:
     derived_from: tosca.interfaces.Root
     operations:
-      connection_to_monitor_operation:
-        inputs:
-          connection_to_monitor_input: 
-            type: serviceInstanceIdDataType
-          SLO:
-            # This technique uses sid entities mapped to TOSCA data types.
-            type: sid:MetricDefinition
-          SLO_using_JSON:
-            # This technique uses a schema taken from the TMForum API (which is itself a simplification of the SID)
+      # These operations reflect the structure of TMF657
+      add_threshold:
+        inputs: 
+          resource: 
             type: string
-            constraints:
-              - schema: { "$schema": "Service_Quality_Management.admin.swagger.json#/definitions/ServiceLevelObjective" }
+          verb: 
+            type: string
+          # We only need on instance of required_SLO but two are declared here to show alternate ways to get the value
+          required_SLO_from_order: 
+            type: service_level_objective_data_type
+          required_SLO_from_template:
+            type: service_level_objective_data_type
+      add_job:
+        inputs:
+          resource: 
+            type: string
+          verb: 
+            type: string
+          threshold_to_apply:
+            type: integer
+          connection_to_monitor: 
+            type: service_order_id_data_type
+    # TOSCA V1.3 does not allow outputs to be defined for operations (although draft V2 does) so use notification to hold the output.
+    notifications:
+      add_threshold_result:
+        outputs:
+          threshold_id: [SELF,threshold_id]
+
+  local_translations:
+    operations:
+      get_SLO_from_service_order:
+        description: Parse 641 format service order to extract SLO and format it as TMF649 SLO
+        inputs:
+          service_order:
+            type: service_order_data_type
+        implementation: scripts\convert641SLO_to_649SLO.sh
+    notifications:
+      get_SLO_result:
+        description: the output from scripts\convert641SLO_to_649SLO.sh
+        outputs:
+          result: [SELF, required_SLO_from_order]
 
 # Define Node Types
-node_types:
+node_types: 
   5G_assure_connection:
     description: assured connection using combination of fixed and wireless
     derived_from: sid:nodes.org.tmforum.models.sidmodels.ResourceDomain.ResourceABE.LogicalResourceABE.LogicalResource.ResourceFunction
     properties:
-      metricDefinition_for_availability:
-        # This technique uses sid entities mapped to TOSCA data types
-        type: sid:MetricDefinition
-        description: The Service Level Objective for instances of this class. Modelled in TOSCA using a datatype derived from SID. 
-        required: false
-      metricDefinition_for_availability_using_json:
+      service_order:
+        type: service_order_data_type
+      required_SLO_from_template:
         # This technique uses a schema taken from the TMForum API (which is itself a simplification of the SID)
-        type: string
-        constraints:
-          - schema: { "$schema": "Service_Quality_Management.admin.swagger.json#/definitions/ServiceLevelObjective" }
-
+        # ServiceLevelObjective is an attribute of Service and defined in TMF657 Service QualityManagement.
+        # This use of API schema differs from Release 1 where SLO was defined from SID directly
+        type: service_level_objective_data_type
     attributes:
-      serviceInstanceId:
-        type: serviceInstanceIdDataType
+      service_order_id:
+        type: service_order_id_data_type
         description: An invented parameter to uniquely identify this connection
-
+      required_SLO_from_order:
+        type: service_level_objective_data_type
+        description: holds the result of the operation to get SLO from service order. An alternative to the hardcoded definition in required_SLO_from_template
+    interfaces:
+      service_translations:
+        type: local_translations
     capabilities:
       # There are always two external, user plane, interfaces
       a_end: Endpoint 
@@ -109,14 +155,17 @@ node_types:
 
   performance_monitor_type:
     derived_from: tosca.nodes.Root
+    attributes:
+      threshold_id:
+        description: holds the result of a create threshold action performed on TMF657
+        type: integer
     capabilities:
       monitor_app:
         type: monitor_performance
         occurrences: [ 0, 1 ]
     interfaces:
       performance_monitor_config:
-        type: 
-          performance_monitor_config
+        type: performance_monitor_config_interface_type
 
 policy_types:
   tosca.policies.Placement.Colocate:
@@ -128,35 +177,18 @@ policy_types:
     targets:
       - 5G:5G_slice
 
+
+
 topology_template:
   node_templates:
     my_assured_connection:
       type: 5G_assure_connection
       # Every CS-CSMS connection requires an instance of a fixed connection and a wireless connection
       properties:
-        metricDefinition_for_availability: 
-          name:
-            "availability"
-          description:
-            "The MetricDefinition used to define the availability of this connection"
-          _metricDefMeasure:
-            # A map of metricDefMeasures associated with this metricDefinition
-            measure1:
-              unitOfMeasure:
-                # so we measure in 1/100 000 ths
-                amount: 0.00001
-                # availability is a ratio and so has no units. User interface may choose to display it as a percentage
-                units: None
-              valueType: float
-              _metricDefinitionThresholdSet:
-                threshold_set1:
-                  thresholdType: LogicDefinition
-                  _metricDefMeasureThresholdRule:
-                  # the above which comes from the node definition points to a superclass but for this instance we want to use a child of that superclass ie MetricThresholdRuleDefinition the child of MetricDefMeasureThresholdRule
-                    rule1:
-                      conformanceTargetLower: 0.9999
-                      conformanceComparatorLower: LE
-        metricDefinition_for_availability_using_json:
+        service_order: { get_input: [ service_order ] }
+        required_SLO_from_template:
+          # This assumes that the availability target is fixed for all instances of this service and so the values are hard coded
+          # An alternative possibility is that the values are provided as part of the service order - see get_SLO operation below
           '{
             "myname":
             {
@@ -168,8 +200,13 @@ topology_template:
                }
             }
           }'
-      attributes:
-        serviceInstanceId:
+      interfaces:
+        service_translations:
+          operations:
+            get_SLO_from_service_order:
+              inputs:
+                service_order: { get_property: [ SELF, service_order ] }
+              # The operations and result are defined in the interface type definition
       requirements:
         - dependency: fixed_connection
           # could add additional node_filter to ensure the endpoints or other properties of the fixed connection  match those of my_CS_CSMS_connection
@@ -210,31 +247,23 @@ topology_template:
       interfaces:
         performance_monitor_config:
           operations:
-            connection_to_monitor_operation:
+            add_threshold:
+              inputs: 
+                resource: threshold
+                verb: post
+                # We only need on instance of required_SLO but two are declared here to show alternate ways to get the value 
+                # The SLO value can be hardcoded like this
+                required_SLO_from_template: { get_property: [my_assured_connection,required_SLO_from_template] }
+                # or the SLO value can be derived from the incoming service request like this
+                required_SLO_from_order: { get_attribute: [my_assured_connection,required_SLO_from_order] }
+              implementation: scripts/TMF657.sh
+            add_job:
               inputs:
-                connection_to_monitor_input: { get_attribute: [my_assured_connection,serviceInstanceId] }
-                SLO:
-                  ## This value is currently hardcoded but could use get_attribute to collect values from my_assured_connection or get_input if required
-                  _metricDefMeasure:
-                    measure1:
-                      unitOfMeasure:
-                        # so we measure in 1/100 000 ths
-                        amount: 0.00001
-                        # availability is a ratio and so has no units. User interface may choose to display it as a percentage
-                        units: None
-                      valueType: float
-                      _metricDefinitionThresholdSet:
-                        threshold_set1:
-                          thresholdType: LogicDefinition
-                          _metricDefMeasureThresholdRule:
-                          # the above which comes from the node definition points to a superclass but for this instance we want to use a child of that superclass ie MetricThresholdRuleDefinition the child of MetricDefMeasureThresholdRule
-                            rule1:
-                              conformanceTargetLower: 0.9999
-                              conformanceComparatorLower: LE
-                SLO_using_JSON: { get_attribute: [my_assured_connection,metricDefinition_for_availability_using_json] }
-                  ## Using a complex JSON datatype as alternative makes it easy to pass but prevents the template author changing the values of the internal properties
-
-
+                resource: job
+                verb: post
+                connection_to_monitor: { get_attribute: [my_assured_connection,service_order_id] }
+                threshold_to_apply: { get_attribute: [SELF,threshold_id] }
+              implementation: scripts/TMF657.sh
 
   policies:
     - wireless_connection_affinity:
@@ -242,3 +271,19 @@ topology_template:
         description: Keep all instances of my_wireless_connection on a single instance of slice_for_5G_assure
         properties:
           affinity: slice_for_5G_assure
+
+  workflows:
+    deploy:
+      steps:
+        extract_SLO:
+          # This is only needed if the template needs to extract SLO values from within the incoming ServiceOrder
+          target: my_assured_connection
+          activities:
+            - call_operation: service_translations.get_SLO_from_service_order
+          on_success:
+          - configure_performance_monitor
+        configure_performance_monitor:
+          target: performance_monitor
+          activities:
+            - call_operation: performance_monitor_config.add_threshold
+            - call_operation: performance_monitor_config.add_job
