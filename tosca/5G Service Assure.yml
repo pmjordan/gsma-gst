@@ -40,6 +40,7 @@ data_types:
       # https://raw.githubusercontent.com/tmforum-apis/TMF657_ServiceQualityManagement/master/Service_Quality_Management.admin.swagger.json#/definitions/ServiceLevelObjective 
       # but blocked by my corporate firewall so use a local copy
         - schema: { "$schema": "swaggers/Service_Quality_Management.admin.swagger.json#/definitions/ServiceLevelObjective" }
+      # It would be equally valid to make the reference direct to the schema rather than the swagger e.g to https://raw.githubusercontent.com/tmforum-rand/schemas/candidates/Service/ServiceLevelObjective.schema.json
 
   service_order_data_type:
     derived_from: json
